@@ -1,0 +1,70 @@
+/* =====================================================================
+   03 · ESTRUCTURA  (cabecera, menú, contenedor y pie de página)
+   ===================================================================== */
+
+/* ---------- Cabecera ---------- */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 48px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* Logo + nombre */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 28px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.logo {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: #111;
+}
+
+/* Menú */
+nav {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+nav a { text-decoration: none; }
+
+/* ---------- Contenedor centrado de cada sección ---------- */
+.wrap {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 48px;
+}
+
+/* ---------- Pie de página ---------- */
+footer {
+  border-top: 1px solid var(--line);
+  padding: 28px 48px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: space-between;
+  color: var(--mut-dark);
+  font-size: 14px;
+  margin-top: 32px;
+}
+
+/* Enlace discreto al panel de administración (pie de página) */
+.acceso {
+  color: var(--disabled);
+  font-size: 12px;
+  text-decoration: none;
+}
+.acceso:hover { color: var(--mut); }

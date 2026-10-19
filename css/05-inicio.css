@@ -1,0 +1,99 @@
+/* =====================================================================
+   05 · INICIO  (portada con foto de fondo, texto y logo)
+   La foto de fondo es img/fondo.jpg
+   ===================================================================== */
+
+/* Contenedor de la portada: pone la foto detrás del texto */
+.hero-bg {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-bottom: 1px solid var(--line);
+}
+/* Capa 1: la foto de fondo (si no existe, se ve un patrón de rayas oscuras) */
+.hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    url(../img/fondo.jpg) center / cover,
+    repeating-linear-gradient(135deg, #0a0a0a 0 28px, #111 28px 56px);
+}
+/* Capa 2: sombra oscura para que se lea el texto */
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(10, 10, 10, .92), rgba(10, 10, 10, .6));
+}
+
+/* Texto a la izquierda, logo a la derecha */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  align-items: center;
+  padding-top: 72px;
+}
+.hero > div {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+.hero h1 {
+  font-size: clamp(52px, 9vw, 96px);  /* se adapta al ancho de pantalla */
+  line-height: .95;
+  margin: 16px 0 20px;
+  font-weight: 700;
+}
+.hero p {
+  font-size: 19px;
+  line-height: 1.5;
+  color: var(--text-soft);
+  max-width: 480px;
+  margin: 0 0 28px;
+}
+
+/* Insignia "Más de 7 años de experiencia" */
+.badge {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+
+/* Etiquetas Fade / Barba / Perfilado */
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 28px;
+}
+.tags span {
+  background: rgba(201, 161, 74, .12);
+  border: 1px solid var(--line2);
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+/* Logo grande circular */
+.herologo {
+  width: min(320px, 70vw);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--accent);
+  background: #111;
+  filter: drop-shadow(0 10px 40px rgba(201, 161, 74, .25));
+}

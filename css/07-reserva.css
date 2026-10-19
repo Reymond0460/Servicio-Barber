@@ -1,0 +1,177 @@
+/* =====================================================================
+   07 · RESERVA  (calendario, horas y panel de datos)
+   Izquierda: calendario y horas.  Derecha: nombre, teléfono y resumen.
+   ===================================================================== */
+
+.book {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  align-items: flex-start;
+}
+.book .l {                      /* columna izquierda */
+  flex: 2 1 520px;
+  min-width: 0;
+}
+.book aside {                   /* columna derecha */
+  flex: 1 1 320px;
+  min-width: 0;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px;
+}
+
+/* ---------- Calendario mensual (estilo calendario de Windows) ---------- */
+.cal {
+  max-width: 420px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+}
+/* Barra superior: mes y flechas */
+.cal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+.cal-head button {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  background: transparent;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+}
+.cal-head button:hover:not(:disabled) { background: var(--card-hover); }
+.cal-head button:disabled { opacity: .25; cursor: not-allowed; }
+
+/* Cuadrícula de 7 columnas (L M M J V S D) */
+.cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+.cal-dows span {                /* letras de los días de la semana */
+  text-align: center;
+  color: var(--mut);
+  font-size: 13px;
+  padding: 6px 0;
+}
+
+/* Cada día */
+.cal-day {
+  aspect-ratio: 1;
+  min-height: 44px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 16px;
+}
+.cal-day:hover:not(:disabled) { background: var(--card-hover); }
+.cal-day.otro { color: var(--disabled); }               /* días de otro mes */
+.cal-day.hoy  { border-color: var(--accent); }          /* hoy: borde dorado */
+.cal-day.sel  {                                         /* día elegido */
+  background: var(--accent);
+  color: var(--bg);
+  font-weight: 600;
+}
+.cal-day.off {                                          /* no disponible */
+  color: #3d392e;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+/* ---------- Horas ---------- */
+.slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(92px, 1fr));
+  gap: 10px;
+}
+.slot {
+  min-height: 48px;
+  border-radius: var(--radius-sm);
+  font-size: 17px;
+  font-weight: 600;
+  border: 2px solid var(--line);
+  background: var(--card);
+}
+.slot.sel {                                             /* hora elegida */
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--bg);
+}
+.slot.busy {                                            /* hora ya tomada */
+  background: #0d0d0d;
+  color: var(--disabled);
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+/* ---------- Resumen de la reserva ---------- */
+.sum {
+  border-top: 1px solid var(--line);
+  padding-top: 16px;
+  margin: 4px 0 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sum div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.sum span:first-child { color: var(--mut); }            /* etiqueta */
+.sum .tot {                                             /* línea del total */
+  font-weight: 600;
+  font-size: 20px;
+}
+.sum .tot span:first-child { color: var(--text); }
+.sum .tot span:last-child  { color: var(--accent); }
+
+/* ---------- Botón confirmar ---------- */
+.confirm {
+  width: 100%;
+  min-height: 52px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  font-size: 17px;
+  font-weight: 600;
+  background: #2a2518;                                  /* apagado: faltan datos */
+  color: #80775f;
+}
+.confirm.ready {                                        /* listo para confirmar */
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* ---------- Mensaje "¡Hora reservada!" ---------- */
+.ok h3 {
+  font-family: var(--font-title);
+  font-size: 34px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin: 0 0 12px;
+}
+
+/* ---------- Casilla de aceptación de la política de privacidad ---------- */
+.consent {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin: 4px 0 16px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--mut);
+}
+.consent input {
+  width: 20px;
+  height: 20px;
+  margin: 2px 0 0;
+  flex: 0 0 auto;
+  accent-color: var(--accent);
+}

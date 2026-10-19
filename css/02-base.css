@@ -1,0 +1,73 @@
+/* =====================================================================
+   02 · BASE  (reglas generales: texto, enlaces, botones, campos)
+   ===================================================================== */
+* { box-sizing: border-box; }
+
+/* Los elementos con el atributo "hidden" (ej. el panel antes de iniciar sesión) no se ven */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+}
+
+/* Títulos: letra condensada y en mayúsculas */
+h1, h2 {
+  font-family: var(--font-title);
+  text-transform: uppercase;
+}
+h2 {
+  font-size: 34px;
+  margin: 0 0 20px;
+  letter-spacing: 1px;
+}
+
+a { color: var(--accent); }
+
+/* Botones y campos de texto heredan la tipografía de la página */
+button, input {
+  font-family: inherit;
+  color: inherit;
+}
+button { cursor: pointer; }
+
+label {
+  font-size: 14px;
+  color: var(--mut);
+}
+input {
+  width: 100%;
+  margin: 6px 0 16px;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line2);
+  background: var(--bg);
+  font-size: 16px;
+}
+
+/* Texto pequeño de ayuda */
+.note {
+  font-size: 13px;
+  color: var(--mut-dark);
+  line-height: 1.5;
+}
+.hint {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--mut-dark);
+}
+.empty {
+  color: var(--mut);
+  padding: 20px 0;
+}
+
+/* Aviso rojo cuando falla la conexión con la base de datos */
+.dberror {
+  background: var(--danger-bg);
+  color: #ffd9d5;
+  padding: 12px 48px;
+  text-align: center;
+  font-size: 14px;
+}

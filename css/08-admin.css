@@ -1,0 +1,131 @@
+/* =====================================================================
+   08 · PANEL DE DIEGO  (admin.html)
+   Tarjetas de resumen, agenda, servicios y clientes.
+   ===================================================================== */
+
+/* ---------- Tarjetas de resumen (cobrado hoy, por cobrar...) ---------- */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--gap);
+}
+.stat {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 22px;
+}
+.stat span {                    /* título pequeño */
+  color: var(--mut);
+  font-size: 14px;
+}
+.stat b {                       /* número grande */
+  display: block;
+  font-family: var(--font-title);
+  font-size: 44px;
+}
+.stat em {                      /* nota bajo el número */
+  color: var(--mut-dark);
+  font-size: 12px;
+  font-style: normal;
+}
+
+/* ---------- Dos columnas: agenda (izquierda) y servicios (derecha) ---------- */
+.cols {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  margin-top: 40px;
+  align-items: flex-start;
+}
+.cols > section:first-child { flex: 2 1 560px; min-width: 0; }
+.cols > section:last-child  { flex: 1 1 320px; min-width: 0; }
+
+/* ---------- Fila de la lista (una reserva, un servicio o un cliente) ---------- */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 10px;
+}
+.row.done { opacity: .65; }                             /* reserva ya cobrada */
+
+.row .t {                       /* hora */
+  font-family: var(--font-title);
+  font-size: 30px;
+  font-weight: 700;
+  width: 76px;
+}
+.row .i {                       /* nombre y detalle */
+  flex: 1 1 160px;
+  min-width: 0;
+}
+.row .i small {
+  display: block;
+  color: var(--mut);
+  font-size: 14px;
+}
+.row .s {                       /* estado: Pendiente / Cobrado */
+  font-size: 13px;
+  font-weight: 600;
+  min-width: 80px;
+  color: var(--accent);
+}
+.row.done .s { color: var(--ok); }
+
+/* ---------- Botones de acción de cada fila ---------- */
+.acts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.acts button {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line2);
+  background: transparent;
+}
+.acts .pay {                    /* Cobrado */
+  background: var(--accent);
+  color: var(--bg);
+  border: 0;
+  font-weight: 600;
+}
+.acts .no {                     /* No llegó */
+  border-color: var(--danger-line);
+  color: var(--danger);
+}
+
+/* ---------- Cartel de "Nueva reserva" (esquina superior derecha) ---------- */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  max-width: min(380px, calc(100vw - 40px));
+  background: var(--card);
+  border: 1px solid var(--accent);
+  color: var(--text);
+  padding: 16px 20px;
+  border-radius: var(--radius);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, .6);
+  line-height: 1.4;
+}
+
+/* ---------- Selector de hora al "Cambiar hora" ---------- */
+select {
+  min-height: 44px;
+  padding: 0 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line2);
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+}

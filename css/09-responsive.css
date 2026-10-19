@@ -1,0 +1,11 @@
+/* =====================================================================
+   09 · CELULAR  (ajustes para pantallas de hasta 640 px de ancho)
+   Va al final para poder sobrescribir las reglas anteriores.
+   ===================================================================== */
+@media (max-width: 640px) {
+  header { padding: 16px; }
+  .wrap { padding: 28px 16px; }
+  .hero { padding-top: 36px; }
+  footer { padding: 20px 16px; }
+  .dberror { padding: 12px 16px; }
+}

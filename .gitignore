@@ -1,0 +1,7 @@
+# Archivos de Windows y herramientas
+desktop.ini
+Thumbs.db
+node_modules/
+.firebase/
+.claude/
+*.log

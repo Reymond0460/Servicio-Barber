@@ -1,0 +1,12 @@
+/* =====================================================================
+   10 · PÁGINAS LEGALES  (privacidad, cookies, términos)
+   ===================================================================== */
+.legal { max-width: 820px; }
+.legal h1 { font-size: 44px; margin: 0 0 4px; }
+.legal h2 { font-size: 24px; margin: 32px 0 10px; }
+.legal p, .legal li { line-height: 1.6; color: var(--text-soft); }
+.legal ul { padding-left: 22px; }
+.legal table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 15px; }
+.legal th, .legal td { border: 1px solid var(--line2); padding: 10px 12px; text-align: left; vertical-align: top; color: var(--text-soft); }
+.legal th { background: var(--card); color: var(--text); }
+.legales a { color: var(--mut); }

@@ -1,0 +1,39 @@
+/* =====================================================================
+   01 · VARIABLES  (colores, tipografías y medidas de toda la página)
+   Para cambiar el look, cambia los valores de aquí: se actualiza todo.
+   ===================================================================== */
+:root {
+  /* --- Colores principales --- */
+  --bg: #0a0a0a;            /* fondo de la página */
+  --card: #151515;          /* fondo de tarjetas y paneles */
+  --card-hover: #222222;    /* tarjeta o botón al pasar el mouse */
+  --card-selected: #1d1a12; /* tarjeta elegida (servicio seleccionado) */
+  --accent: #c9a14a;        /* dorado: botones, precios, detalles */
+
+  /* --- Texto --- */
+  --text: #f4efe4;          /* texto normal */
+  --text-soft: #cfc7b3;     /* texto de párrafos */
+  --mut: #a89f8a;           /* texto secundario */
+  --mut-dark: #8a826e;      /* texto pequeño (notas, pie de página) */
+  --disabled: #5c5646;      /* texto desactivado (días pasados, horas ocupadas) */
+
+  /* --- Bordes --- */
+  --line: #2a2418;          /* borde suave */
+  --line2: #4a3d22;         /* borde más visible (botones, campos) */
+
+  /* --- Estados --- */
+  --ok: #4fc3a1;            /* cobrado */
+  --danger: #ff9a92;        /* texto de "No llegó" */
+  --danger-line: #8a3a36;   /* borde de "No llegó" */
+  --danger-bg: #5a1f1b;     /* fondo del aviso de error */
+
+  /* --- Tipografías (se cargan desde Google Fonts en el HTML) --- */
+  --font-title: 'Barlow Condensed', sans-serif;
+  --font-body: 'Barlow', sans-serif;
+
+  /* --- Medidas --- */
+  --max-width: 1200px;      /* ancho máximo del contenido */
+  --radius: 10px;           /* esquinas de tarjetas */
+  --radius-sm: 8px;         /* esquinas de botones y campos */
+  --gap: 16px;              /* separación estándar */
+}

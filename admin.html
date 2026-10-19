@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Panel de Diego</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Barlow:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+<header>
+  <div class="brand"><img class="logo" src="img/logo.jpeg" alt="">Panel · Diego</div>
+  <nav><button class="btnline" id="logout" hidden style="background:none">Cerrar sesión</button><a class="btnline" href="index.html">Ver página de clientes</a></nav>
+</header>
+
+<!-- Inicio de sesión: el panel solo se muestra después de entrar -->
+<section class="wrap" id="login" style="max-width:460px">
+  <h2>Entrar al panel</h2>
+  <form id="loginForm" style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:24px">
+    <label for="email">Correo</label><input id="email" type="email" autocomplete="username" required>
+    <label for="pass">Clave</label><input id="pass" type="password" autocomplete="current-password" required>
+    <button class="cta" type="submit" style="width:100%">Entrar</button>
+    <div class="hint" id="loginMsg" role="status"></div>
+  </form>
+</section>
+
+<main class="wrap" id="panel" hidden>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px">
+    <button class="btnline" id="notif" style="background:none;min-height:44px">Activar avisos de nuevas reservas</button>
+    <span class="note" id="notifMsg" role="status"></span>
+  </div>
+  <div class="stats" id="stats"></div>
+  <div class="cols">
+    <section>
+      <h2>Agenda de hoy</h2>
+      <div id="agenda"></div>
+      <p class="note">«No llegó» deja la hora libre para otro cliente (la reserva queda guardada en el historial). «Cambiar hora» te deja elegir cualquier hora libre del día.</p>
+    </section>
+    <section>
+      <h2>Servicios</h2>
+      <div id="svcs"></div>
+      <div id="removed"></div>
+      <div style="background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;margin-top:16px">
+        <b>Agregar servicio</b>
+        <label for="sn" style="display:block;margin-top:12px">Nombre</label><input id="sn" placeholder="Ej: Corte + barba">
+        <label for="sp">Precio (CLP)</label><input id="sp" placeholder="10000" inputmode="numeric">
+        <label for="sd">Duración</label><input id="sd" value="1 hora" placeholder="Ej: 1 hora">
+        <button class="cta" id="add" style="width:100%">Agregar</button>
+      </div>
+    </section>
+  </div>
+<section style="margin-top:40px">
+    <h2>Clientes</h2>
+    <div id="clients"></div>
+  </section>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/notificaciones.js"></script>
+<script src="js/admin.js"></script>
+</body>
+</html>

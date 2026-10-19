@@ -1,0 +1,27 @@
+/* =====================================================================
+   ESTILOS DE BARBER DIEGO  ·  archivo principal
+   Cada archivo de esta carpeta (css/) se ocupa de una parte de la página.
+   El ORDEN importa: los últimos pueden sobrescribir a los primeros.
+
+   ¿Qué quieres cambiar?                    Archivo
+   ---------------------------------------------------------------------
+   Colores, tipografías, medidas ........... 01-variables.css
+   Texto, enlaces, campos ................... 02-base.css
+   Cabecera, menú, pie de página ............ 03-layout.css
+   Botones dorados y con borde .............. 04-botones.css
+   Portada (foto de fondo, logo, insignia) .. 05-inicio.css
+   Servicios y galería de trabajos .......... 06-servicios-galeria.css
+   Calendario, horas y datos del cliente .... 07-reserva.css
+   Panel de Diego ........................... 08-admin.css
+   Ajustes para celular ..................... 09-responsive.css
+   ===================================================================== */
+@import url("01-variables.css");
+@import url("02-base.css");
+@import url("03-layout.css");
+@import url("04-botones.css");
+@import url("05-inicio.css");
+@import url("06-servicios-galeria.css");
+@import url("07-reserva.css");
+@import url("08-admin.css");
+@import url("09-responsive.css");
+@import url("10-legal.css");
