@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "site": "diegostudiobarber",
+    "public": ".",
+    "ignore": [
+      "documentos/**",
+      "instructivo/**",
+      "firestore.rules",
+      "firebase.json",
+      ".firebaserc",
+      "**/.*",
+      "**/desktop.ini",
+      "**/node_modules/**"
+    ]
+  }
+}

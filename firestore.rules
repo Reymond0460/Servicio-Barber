@@ -1,0 +1,66 @@
+// Reglas de seguridad de Firestore para Barber Diego.
+// Pegar en: Firebase Console > Firestore > Reglas > Publicar.
+//
+// Qué puede hacer cualquier persona (sin login):
+//   - leer los servicios y qué horas están ocupadas (sin datos de clientes)
+//   - crear una reserva
+// Todo lo demás (ver clientes, teléfonos, ingresos, cobrar, liberar horas,
+// editar servicios) solo lo puede hacer la cuenta de Diego.
+//
+// CORREOS AUTORIZADOS: edita la lista de abajo. Cada correo debe existir
+// antes como usuario en Firebase > Authentication > Usuarios.
+//   - tu correo (administrador de la página)
+//   - el de Diego (dueño), cuando lo tengas: agrégalo a la lista y vuelve a publicar
+// Para una prueba, pon aquí el correo de pruebas y cámbialo por los definitivos después.
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function esDiego() {
+      return request.auth != null
+        && request.auth.token.email in [
+          'admin.barber@barber.cl'
+          , 'diegoodieguitoo17@gmail.com'
+          // , 'CORREO_ADMIN@gmail.com'
+          // , 'CORREO_DE_DIEGO@gmail.com'
+        ];
+    }
+
+    // Servicios: todos leen, solo Diego escribe. "Quitar" los marca active:false;
+    // solo un servicio ya quitado se puede borrar para siempre.
+    match /services/{id} {
+      allow read: if true;
+      allow create, update: if esDiego();
+      allow delete: if esDiego() && resource.data.active == false;
+    }
+
+    // Reservas: cualquiera puede crear una (siempre 'open' y junto con su candado de hora).
+    // Leer, cobrar, cambiar o marcar "no llegó": solo Diego.
+    match /appointments/{id} {
+      allow create: if request.resource.data.status == 'open'
+        && request.resource.data.consent.accepted == true
+        && getAfter(/databases/$(database)/documents/slots/$(request.resource.data.date + '_' + request.resource.data.time.replace(':', ''))).data.apptId == id;
+      allow read, update: if esDiego();
+      allow delete: if false;
+    }
+
+    // Candados de hora: todos leen y crean (para reservar); solo Diego los libera o mueve.
+    match /slots/{id} {
+      allow read: if true;
+      allow create: if true;
+      allow delete: if esDiego();
+      allow update: if false;
+    }
+
+    // Clientes e ingresos: solo Diego. Los ingresos no se borran (solo se anonimizan).
+    match /clients/{id} {
+      allow read, create, update: if esDiego();
+      allow delete: if esDiego();   // derecho de supresión de datos personales
+    }
+    match /ingresos/{id} {
+      allow read, create: if esDiego();
+      allow update: if esDiego();   // solo para anonimizar al borrar los datos de un cliente
+      allow delete: if false;
+    }
+  }
+}
