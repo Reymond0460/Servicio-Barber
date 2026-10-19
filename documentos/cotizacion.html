@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Cotización · Página de reservas DiegoStudioBarber</title>
+<style>
+  @page { size: A4; margin: 16mm 17mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; color: #1c1a16; font-size: 10.5pt; line-height: 1.5; }
+  h1 { font-size: 22pt; margin: 0; letter-spacing: .5px; }
+  h2 { font-size: 12.5pt; margin: 7mm 0 2.5mm; padding-bottom: 1.5mm; border-bottom: 2px solid #c9a14a; text-transform: uppercase; letter-spacing: .6px; }
+  .cab { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #0a0a0a; padding-bottom: 4mm; }
+  .cab small { color: #6a6454; display: block; }
+  .datos { display: grid; grid-template-columns: 1fr 1fr; gap: 4mm; margin-top: 5mm; }
+  .datos div { background: #f6f1e4; padding: 3mm 4mm; border-radius: 3px; }
+  .datos b { display: block; font-size: 9pt; text-transform: uppercase; color: #6a6454; letter-spacing: .5px; }
+  table { border-collapse: collapse; width: 100%; margin: 2mm 0; }
+  th, td { border: 1px solid #d8d2c4; padding: 2mm 3mm; text-align: left; vertical-align: top; }
+  th { background: #f6f1e4; font-size: 9.5pt; }
+  td.n, th.n { text-align: right; white-space: nowrap; }
+  tr.total td { background: #0a0a0a; color: #f4efe4; font-weight: bold; border-color: #0a0a0a; }
+  tr.total td.n { color: #c9a14a; }
+  ul { margin: 1mm 0 1mm 4mm; padding-left: 4mm; }
+  li { margin-bottom: 1mm; }
+  .tachado { text-decoration: line-through; color: #8a826e; }
+  .nota { font-size: 9pt; color: #6a6454; }
+  .bloque { page-break-inside: avoid; }
+  .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 18mm; margin-top: 18mm; page-break-inside: avoid; }
+  .firma { border-top: 1px solid #1c1a16; padding-top: 2mm; text-align: center; font-size: 10pt; }
+  .firma small { color: #6a6454; display: block; }
+</style>
+</head>
+<body>
+
+<div class="cab">
+  <div>
+    <h1>Cotización</h1>
+    <small style="color:#6a6454">Página web de reservas y panel de administración</small>
+  </div>
+  <div style="text-align:right">
+    <b>Brayan Mondaca G.</b>
+    <small>Desarrollo web independiente</small>
+    <small>15 de octubre de 2026</small>
+  </div>
+</div>
+
+<div class="datos">
+  <div><b>Cliente</b>Diego · DiegoStudioBarber<br>Instagram: @diegostudiobarber<br>WhatsApp: +56 9 8419 5182</div>
+  <div><b>Proyecto</b>Sitio de reservas en línea para barbería, con panel de administración, base de datos, dominio .cl y publicación en internet.</div>
+</div>
+
+<h2>1. Alcance del trabajo</h2>
+<p><b>Página para los clientes</b></p>
+<ul>
+  <li>Portada con logo, fotos de trabajos, servicios con precio y duración, y enlaces a WhatsApp e Instagram.</li>
+  <li>Reserva en 3 pasos: calendario mensual, horas disponibles y datos del cliente (nombre y celular chileno validado). Sin pago en línea y sin que el cliente cree cuenta.</li>
+  <li>Bloqueo de horas ocupadas y de horas ya pasadas, y protección contra reservas duplicadas.</li>
+  <li>Diseño adaptado a computador y celular.</li>
+</ul>
+<p><b>Panel de administración (con correo y clave)</b></p>
+<ul>
+  <li>Resumen de ingresos: cobrado hoy, por cobrar, ingresos del mes y horas liberadas.</li>
+  <li>Agenda del día con las acciones <i>Cobrado</i>, <i>Cambiar hora</i> (a cualquier hora libre) y <i>No llegó</i> (libera la hora).</li>
+  <li>Gestión de servicios: agregar, quitar, restaurar y eliminar definitivamente.</li>
+  <li>Registro de clientes e ingresos, y avisos de nuevas reservas mientras el panel está abierto.</li>
+</ul>
+<p><b>Infraestructura y entrega</b></p>
+<ul>
+  <li>Base de datos en la nube (Firebase), con reglas de seguridad y respaldo del historial de reservas, ingresos y servicios.</li>
+  <li>Inscripción del dominio .cl, publicación en internet con certificado de seguridad (https) y conexión del dominio.</li>
+  <li>Instructivo de uso en PDF y capacitación breve a Diego.</li>
+</ul>
+
+<h2>2. Inversión</h2>
+<div class="bloque">
+<table>
+  <tr><th>Concepto</th><th class="n">Valor (CLP)</th></tr>
+  <tr><td>Valor referencial de mercado para un sitio de este alcance</td><td class="n tachado">desde $2.000.000</td></tr>
+  <tr class="total"><td>Desarrollo completo de la página (pago único)</td><td class="n">$500.000</td></tr>
+  <tr><td>Servidor, hosting, base de datos y certificado de seguridad</td><td class="n">$0 (incluidos)</td></tr>
+  <tr><td>Dominio .cl (renovación anual, valor referencial NIC Chile)</td><td class="n">$9.990 al año</td></tr>
+  <tr><td>Mantención y evolución (mensual, ver sección 4)</td><td class="n">$25.000 al mes</td></tr>
+</table>
+<p class="nota">El valor del dominio es la tarifa publicada por NIC Chile en 2023 y puede cambiar. El uso de Firebase se mantiene sin costo mientras el tráfico esté dentro del plan gratuito de Google, lo que es esperable para una barbería. Si el uso lo superara, se informaría antes de cualquier cobro.</p>
+</div>
+
+<h2>3. Forma de pago y entrega</h2>
+<table>
+  <tr><th>Hito</th><th>Detalle</th><th class="n">Monto</th></tr>
+  <tr><td>Anticipo (50%)</td><td>Al aceptar esta cotización. Con el anticipo comienza el trabajo.</td><td class="n">$250.000</td></tr>
+  <tr><td>Saldo (50%)</td><td>Contra entrega: página publicada en internet con el dominio real, funcionando.</td><td class="n">$250.000</td></tr>
+</table>
+<ul>
+  <li><b>Plazo de entrega: 31 de octubre de 2026</b>, contado desde el pago del anticipo y la recepción de los materiales pendientes (dirección, fotos y servicios definitivos).</li>
+  <li><b>Semana de pruebas:</b> después del pago, se incluye 1 semana de pruebas en que se corrigen sin costo los errores que se detecten en el funcionamiento acordado.</li>
+  <li><b>Dominio:</b> se inscribe con los datos de Brayan Mondaca G.</li>
+</ul>
+<p class="nota">Datos para transferencia: [BANCO · TIPO DE CUENTA · N° DE CUENTA · NOMBRE · RUT · CORREO]</p>
+
+<h2>4. Mantención mensual ($25.000)</h2>
+<ul>
+  <li><b>Evolución continua:</b> la página irá creciendo con nuevas funcionalidades y mejoras a medida que el negocio lo necesite.</li>
+  <li><b>Disponibilidad 24/7:</b> atención de fallas e incidencias de la página, para que Diego pueda contar con ella en todo momento.</li>
+  <li>Cambios de textos, fotos, servicios y precios, y soporte de uso por WhatsApp.</li>
+  <li>Revisión del funcionamiento, de la seguridad y de la renovación anual del dominio.</li>
+</ul>
+
+<h2>5. Lo que no incluye</h2>
+<ul>
+  <li>Pagos en línea o cobros por la página (hoy el cliente paga en la barbería).</li>
+  <li>Avisos por WhatsApp o notificaciones con el panel cerrado (requieren un plan de pago de Google). Pueden sumarse más adelante como mejora.</li>
+  <li>Redacción de textos, fotografías y logos nuevos. Se usan los que entregue Diego.</li>
+  <li>Aplicación móvil instalable.</li>
+</ul>
+
+<h2>6. Aceptación</h2>
+<p>Al firmar, el cliente acepta el alcance, los valores y las condiciones de esta cotización. Vigencia de la cotización: 15 días desde su fecha.</p>
+
+<div class="firmas">
+  <div class="firma">Brayan Mondaca G.<small>Desarrollador</small></div>
+  <div class="firma">[Nombre completo y RUT]<small>Diego · DiegoStudioBarber (cliente)</small></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Instructivo · DiegoStudioBarber</title>
+<style>
+  @page { size: A4; margin: 16mm 15mm; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: 'Segoe UI', Arial, sans-serif; color: #1c1a16; font-size: 11.5pt; line-height: 1.5; }
+  h1, h2, h3 { font-family: 'Segoe UI Semibold', 'Segoe UI', Arial, sans-serif; margin: 0; }
+  .portada { height: 255mm; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; page-break-after: always; background: #0a0a0a; color: #f4efe4; border-radius: 6px; padding: 20mm; }
+  .portada img { width: 60mm; height: 60mm; border-radius: 50%; border: 2px solid #c9a14a; object-fit: cover; margin-bottom: 14mm; }
+  .portada h1 { font-size: 30pt; letter-spacing: 1px; color: #c9a14a; }
+  .portada p { font-size: 13pt; color: #cfc7b3; margin-top: 6mm; }
+  .parte { font-size: 20pt; border-bottom: 3px solid #c9a14a; padding-bottom: 3mm; margin-bottom: 6mm; }
+  .paso { page-break-inside: avoid; margin-bottom: 9mm; }
+  .paso h3 { font-size: 13.5pt; margin-bottom: 2mm; }
+  .num { display: inline-block; width: 8mm; height: 8mm; border-radius: 50%; background: #c9a14a; color: #0a0a0a; text-align: center; line-height: 8mm; font-weight: bold; margin-right: 3mm; }
+  .paso img { width: 100%; border: 1px solid #d8d2c4; border-radius: 4px; margin: 3mm 0; display: block; }
+  .pie { font-size: 9.5pt; color: #6a6454; margin-top: -1mm; }
+  ul { margin: 2mm 0 2mm 5mm; padding-left: 4mm; }
+  li { margin-bottom: 1.2mm; }
+  .caja { background: #f6f1e4; border-left: 4px solid #c9a14a; padding: 3mm 4mm; margin: 3mm 0; page-break-inside: avoid; }
+  .saltar { page-break-before: always; }
+  table { border-collapse: collapse; width: 100%; margin: 3mm 0; font-size: 10.5pt; }
+  th, td { border: 1px solid #d8d2c4; padding: 2mm 3mm; text-align: left; vertical-align: top; }
+  th { background: #f6f1e4; }
+</style>
+</head>
+<body>
+
+<section class="portada">
+  <img src="../img/logo.jpeg" alt="">
+  <h1>DiegoStudioBarber</h1>
+  <p>Instructivo de uso<br>Página de reservas y panel de administración</p>
+  <p style="font-size:10pt;margin-top:14mm">Versión de prueba · Las imágenes del panel usan datos de ejemplo</p>
+</section>
+
+<!-- ================= PARTE 1 ================= -->
+<h2 class="parte">Parte 1 · La página de tus clientes</h2>
+<p>Es lo que ve cada cliente cuando entra a la dirección de tu página. No necesita crear cuenta ni iniciar sesión. Reservar toma menos de un minuto y <b>no se paga nada en la página</b>: el cliente paga en la barbería después del corte.</p>
+
+<div class="paso">
+  <h3><span class="num">1</span>Portada</h3>
+  <img src="img/01.jpg" alt="Portada">
+  <ul>
+    <li>Arriba está tu logo y el menú: <b>Servicios</b>, <b>Trabajos</b> y <b>Reservar</b>. Al tocar cada uno, la página baja a esa sección.</li>
+    <li>Se muestran tu insignia «Más de 7 años de experiencia» y las etiquetas <b>Fade, Barba y Perfilado</b>.</li>
+    <li>El botón dorado <b>«Agendar mi hora»</b> lleva directo a la reserva.</li>
+  </ul>
+</div>
+
+<div class="paso">
+  <h3><span class="num">2</span>Servicios y Trabajos</h3>
+  <img src="img/02.jpg" alt="Servicios y trabajos">
+  <ul>
+    <li><b>Servicios:</b> el cliente ve el nombre, el precio y la duración de cada servicio activo. Si hay más de uno, toca el que quiere.</li>
+    <li><b>Trabajos:</b> galería con fotos de tus cortes. Debajo hay un enlace a tu Instagram.</li>
+  </ul>
+</div>
+
+<div class="paso">
+  <h3><span class="num">3</span>Elegir el día</h3>
+  <img src="img/03.jpg" alt="Calendario">
+  <ul>
+    <li>Calendario mensual. Las flechas ▲ ▼ cambian de mes.</li>
+    <li>El día de hoy tiene un círculo dorado. Los días <b>tachados o apagados</b> no se pueden elegir: ya pasaron o son domingo (día cerrado).</li>
+  </ul>
+</div>
+
+<div class="paso">
+  <h3><span class="num">4</span>Elegir la hora</h3>
+  <img src="img/04.jpg" alt="Horas del día">
+  <ul>
+    <li>Al elegir un día aparecen las horas de ese día.</li>
+    <li>Las horas <b>tachadas</b> ya están reservadas por otro cliente o ya pasaron. Una hora se puede reservar hasta 30 minutos después de empezar.</li>
+    <li>La hora elegida se marca en dorado y aparece en el resumen de la derecha.</li>
+  </ul>
+</div>
+
+<div class="paso saltar">
+  <h3><span class="num">5</span>Nombre y teléfono, y confirmar</h3>
+  <img src="img/05.jpg" alt="Datos del cliente">
+  <ul>
+    <li>El cliente escribe su <b>nombre</b> y su <b>celular</b> en formato chileno (ej. +56912345678).</li>
+    <li>El botón <b>«Confirmar reserva»</b> se enciende cuando están el día, la hora, el nombre y un celular válido.</li>
+    <li>El resumen muestra el servicio, el día, la hora y el <b>total a pagar en el local</b>.</li>
+  </ul>
+</div>
+
+<div class="paso">
+  <h3><span class="num">6</span>Reserva confirmada</h3>
+  <img src="img/06.jpg" alt="Reserva confirmada">
+  <ul>
+    <li>Aparece «¡Hora reservada!» con el día, la hora y el valor a pagar.</li>
+    <li>La hora queda tomada de inmediato para los demás clientes. Dos personas no pueden reservar la misma hora.</li>
+    <li>Si el cliente no puede llegar, debe avisarte para liberar la hora.</li>
+  </ul>
+</div>
+
+<!-- ================= PARTE 2 ================= -->
+<h2 class="parte saltar">Parte 2 · Tu panel de administración</h2>
+<p>Es solo para ti. Se entra desde el enlace pequeño «Acceso» que está al final de la página de clientes. Las imágenes de esta parte usan <b>datos de ejemplo</b>.</p>
+
+<div class="paso">
+  <h3><span class="num">1</span>Entrar al panel</h3>
+  <img src="img/07.jpg" alt="Entrada al panel">
+  <ul>
+    <li>Escribe tu <b>correo</b> y tu <b>clave</b> y pulsa «Entrar». Sin eso, nadie ve tus datos.</li>
+    <li>Cuando termines, usa <b>«Cerrar sesión»</b> (arriba a la derecha), sobre todo si usas un computador que no es tuyo.</li>
+  </ul>
+</div>
+
+<div class="paso saltar">
+  <h3><span class="num">2</span>Resumen y agenda de hoy</h3>
+  <img src="img/08.jpg" alt="Panel principal">
+  <p><b>Tarjetas de arriba:</b></p>
+  <ul>
+    <li><b>Cobrado hoy:</b> lo que ya cobraste en el día.</li>
+    <li><b>Por cobrar hoy:</b> el valor de las reservas de hoy que aún no marcas como cobradas.</li>
+    <li><b>Ingresos del mes:</b> todo lo cobrado en el mes en curso.</li>
+    <li><b>Horas liberadas:</b> cuántas veces marcaste «No llegó».</li>
+  </ul>
+  <p><b>Agenda de hoy:</b> cada reserva muestra la hora, el nombre, el servicio, el precio y el teléfono. Las pendientes tienen tres botones:</p>
+  <table>
+    <tr><th style="width:32mm">Botón</th><th>Qué hace</th></tr>
+    <tr><td><b>Cobrado</b></td><td>Marca que el cliente pagó. El monto se suma a tus ingresos y el cliente queda guardado en tu lista de clientes.</td></tr>
+    <tr><td><b>Cambiar hora</b></td><td>Te deja elegir otra hora libre del mismo día (ver el paso siguiente).</td></tr>
+    <tr><td><b>No llegó</b></td><td>Libera la hora para que otro cliente pueda tomarla. La reserva queda guardada en el historial.</td></tr>
+  </table>
+  <p>El botón <b>«Activar avisos de nuevas reservas»</b> (arriba a la izquierda) permite que el navegador te avise cuando alguien reserva. Ver la parte 3.</p>
+</div>
+
+<div class="paso saltar">
+  <h3><span class="num">3</span>Cambiar la hora de una reserva</h3>
+  <img src="img/09.jpg" alt="Cambiar hora">
+  <ul>
+    <li>Al pulsar «Cambiar hora», aparece una lista con <b>solo las horas libres</b> de ese día.</li>
+    <li>Elige la hora y pulsa <b>«Mover»</b>. La hora anterior queda libre de inmediato. «Cancelar» deja todo como estaba.</li>
+    <li>Si otro cliente toma esa hora justo antes, el panel te avisa y eliges otra.</li>
+  </ul>
+</div>
+
+<div class="paso saltar">
+  <h3><span class="num">4</span>Servicios y clientes</h3>
+  <img src="img/10.jpg" alt="Servicios y clientes">
+  <ul>
+    <li><b>Agregar servicio:</b> escribe el nombre, el precio y la duración, y pulsa «Agregar». Aparece enseguida en la página de tus clientes. Así puedes sumar, por ejemplo, «Corte + Barba».</li>
+    <li><b>Quitar:</b> oculta el servicio de la página de clientes, pero <b>no lo borra</b>. Queda en «Servicios eliminados».</li>
+    <li><b>Restaurar:</b> vuelve a poner un servicio quitado, por si lo sacaste por error.</li>
+    <li><b>Eliminar:</b> borra para siempre un servicio que ya estaba quitado. Pide confirmación y no se puede deshacer. Las reservas que ya se hicieron con ese servicio se mantienen.</li>
+    <li><b>Clientes:</b> lista de las personas que has cobrado, con su teléfono, cuántas veces han venido y cuánto han gastado.</li>
+  </ul>
+</div>
+
+<!-- ================= PARTE 3 ================= -->
+<h2 class="parte saltar">Parte 3 · Cosas importantes</h2>
+
+<div class="caja"><b>Avisos de nuevas reservas.</b> Cuando el panel está abierto en el navegador y llega una reserva, aparece un cartel, suena un aviso y el título de la pestaña muestra el número de reservas nuevas. Para recibir también la notificación del navegador, pulsa «Activar avisos» y acepta el permiso. <b>Si el panel está cerrado, no avisa.</b></div>
+
+<div class="caja"><b>Qué guarda la página.</b> Las reservas, los clientes, los ingresos y los servicios quedan guardados en la base de datos de Firebase. Si se cierra el navegador o se apaga el computador, no se pierde nada.</div>
+
+<div class="caja"><b>Cuidado con tu clave.</b> Cualquiera con tu correo y tu clave puede ver tus ingresos y los teléfonos de tus clientes. No la compartas, y cámbiala si alguien más la llega a conocer.</div>
+
+<h3 style="margin:6mm 0 2mm">Qué puedes cambiar después</h3>
+<table>
+  <tr><th style="width:55mm">Qué</th><th>Cómo</th></tr>
+  <tr><td>Servicios y precios</td><td>Desde el panel (agregar, quitar, restaurar, eliminar).</td></tr>
+  <tr><td>Horas de atención, días cerrados y hasta cuándo se puede reservar</td><td>Se ajusta en la configuración de la página (archivo <code>js/data.js</code>). Pídeselo a quien administra la página.</td></tr>
+  <tr><td>Fotos de «Trabajos» y de la portada</td><td>Se reemplazan o se agregan en la carpeta de imágenes de la página.</td></tr>
+  <tr><td>Colores y textos</td><td>Se cambian en los archivos de diseño de la página.</td></tr>
+</table>
+
+<h3 style="margin:6mm 0 2mm">Pendiente antes de publicar</h3>
+<ul>
+  <li>Dirección de la barbería.</li>
+  <li>Definir el servicio de hosting y la dirección web (dominio).</li>
+  <li>Servicios y precios reales.</li>
+</ul>
+
+</body>
+</html>
