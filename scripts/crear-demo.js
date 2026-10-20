@@ -40,6 +40,16 @@ fs.writeFileSync(modo, despues);
 //    el Instagram ni la ubicación reales del negocio. Se aplica solo a la copia.
 //    El orden importa: primero los textos más largos.
 const REEMPLAZOS = [
+  // Nombre del negocio: la demo se llama «StudioBarber»; la página real conserva «DiegoStudioBarber».
+  ['DiegoStudioBarber', 'StudioBarber'],
+  ['Corte realizado por Diego', 'Corte realizado por StudioBarber'],
+  ['Panel de Diego', 'Panel de StudioBarber'],
+  ['Panel · Diego', 'Panel · StudioBarber'],
+  ['El responsable (Diego)', 'El responsable (el negocio)'],
+  ['RAZÓN SOCIAL DE DIEGO', 'RAZÓN SOCIAL DEL NEGOCIO'],
+  ['avísale a Diego para liberar', 'avísale al negocio para liberar'],
+  ['Solo Diego, con correo', 'Solo el administrador, con correo'],
+  ['administración de Diego', 'administración del negocio'],
   ['href="https://wa.me/56984195182" target="_blank" rel="noopener"', 'href="#"'],
   ['href="https://www.instagram.com/diegostudiobarber/" target="_blank" rel="noopener"', 'href="#"'],
   ['href="https://www.instagram.com/diegostudiobarber/"', 'href="#"'],
@@ -60,10 +70,20 @@ for (const archivo of fs.readdirSync(SALIDA).filter(f => f.endsWith('.html'))) {
   let html = fs.readFileSync(ruta, 'utf8')
     .replace('<meta charset="utf-8">', '<meta charset="utf-8">\n  <meta name="robots" content="noindex, nofollow">')
     .replace(SDK_FIREBASE, '')
+    // En la demo no se muestra Instagram: se quitan el párrafo «Más trabajos en…» y el enlace del pie de página.
+    .replace(/\s*<p class="note"[^>]*>Más trabajos en <a href="https:\/\/www\.instagram\.com\/[^"]*"[^>]*>[^<]*<\/a><\/p>/g, '')
+    .replace(/ · <a href="https:\/\/www\.instagram\.com\/[^"]*"[^>]*>[^<]*<\/a>/g, '')
     // Quitar los comentarios HTML: pueden guardar enlaces o datos reales que se ven en "ver código fuente".
     .replace(/<!--[\s\S]*?-->/g, '');
   for (const [buscar, poner] of REEMPLAZOS) html = html.split(buscar).join(poner);
   fs.writeFileSync(ruta, html);
+}
+// Los mensajes que ve el cliente dentro de js/reservas.js también llevan los reemplazos.
+for (const archivo of ['reservas.js']) {
+  const ruta = path.join(SALIDA, 'js', archivo);
+  let js = fs.readFileSync(ruta, 'utf8');
+  for (const [buscar, poner] of REEMPLAZOS) js = js.split(buscar).join(poner);
+  fs.writeFileSync(ruta, js);
 }
 // Configuración de Firebase vacía (la demo no se conecta a ninguna base de datos).
 fs.writeFileSync(
