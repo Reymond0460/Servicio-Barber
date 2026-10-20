@@ -49,7 +49,7 @@ function normalizarTelefono(texto) {
 const ts = () => firebase.firestore.FieldValue.serverTimestamp();
 
 // ---------- Acceso a la base de datos ----------
-const Store = {
+const StoreFirebase = {
 
   // Escucha los servicios en tiempo real (activos y eliminados).
   onServices(cb, onError) {
@@ -173,6 +173,9 @@ const Store = {
     return fdb.collection('services').doc(id).update({ active: true, removedAt: null });
   }
 };
+
+// En la versión demo (js/modo.js) se usan datos de ejemplo del navegador en vez de Firebase.
+const Store = (typeof MODO_DEMO !== 'undefined' && MODO_DEMO) ? StoreDemo : StoreFirebase;
 
 // Mensaje de error amistoso si la base de datos rechaza la conexión.
 function mostrarErrorBD(err) {

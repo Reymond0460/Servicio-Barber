@@ -156,12 +156,20 @@ function conectar() {
   Store.onClients(l => { D.clients = l; render(); }, mostrarErrorBD);
 }
 
-firebase.auth().onAuthStateChanged(user => {
-  $('login').hidden = !!user;
-  $('panel').hidden = !user;
-  $('logout').hidden = !user;
-  if (user) { conectar(); render(); }
-});
+if (MODO_DEMO) {
+  // En la demo no hay inicio de sesión: el panel se muestra de inmediato con datos de ejemplo.
+  $('login').hidden = true;
+  $('panel').hidden = false;
+  $('logout').hidden = true;
+  conectar(); render();
+} else {
+  firebase.auth().onAuthStateChanged(user => {
+    $('login').hidden = !!user;
+    $('panel').hidden = !user;
+    $('logout').hidden = !user;
+    if (user) { conectar(); render(); }
+  });
+}
 
 $('loginForm').onsubmit = async e => {
   e.preventDefault();
