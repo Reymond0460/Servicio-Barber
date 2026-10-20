@@ -43,11 +43,12 @@ const REEMPLAZOS = [
   ['href="https://wa.me/56984195182" target="_blank" rel="noopener"', 'href="#"'],
   ['href="https://www.instagram.com/diegostudiobarber/" target="_blank" rel="noopener"', 'href="#"'],
   ['href="https://www.instagram.com/diegostudiobarber/"', 'href="#"'],
-  ['+56 9 8419 5182', '+56 9 XXXX XXXX'],
-  ['@diegostudiobarber', '@tu_instagram'],
-  ['San Miguel, Santiago', 'Tu ciudad'],
-  ['San Miguel', 'Tu ciudad'],
-  ['Brayan Mondaca G.', '[Nombre del desarrollador]']
+  // Datos inventados con aspecto real (ficticios): no pertenecen a ninguna persona ni negocio.
+  ['+56 9 8419 5182', '+56 9 1234 5678'],
+  ['@diegostudiobarber', '@barberia_demo'],
+  ['San Miguel, Santiago', 'Calle Ejemplo 123, Santiago'],
+  ['San Miguel', 'Santiago'],
+  ['Brayan Mondaca G.', 'Desarrollador Demo']
 ];
 
 // 3) Pedir a los buscadores que no la indexen, aplicar los reemplazos y
