@@ -36,12 +36,37 @@ const despues = antes.replace('const MODO_DEMO = false;', 'const MODO_DEMO = tru
 if (antes === despues) throw new Error('No se encontró "const MODO_DEMO = false;" en js/modo.js');
 fs.writeFileSync(modo, despues);
 
-// 2) Pedir a los buscadores que no la indexen.
+// 2) Ocultar los datos reales: la demo es pública y no debe mostrar el teléfono,
+//    el Instagram ni la ubicación reales del negocio. Se aplica solo a la copia.
+//    El orden importa: primero los textos más largos.
+const REEMPLAZOS = [
+  ['href="https://wa.me/56984195182" target="_blank" rel="noopener"', 'href="#"'],
+  ['href="https://www.instagram.com/diegostudiobarber/" target="_blank" rel="noopener"', 'href="#"'],
+  ['href="https://www.instagram.com/diegostudiobarber/"', 'href="#"'],
+  ['+56 9 8419 5182', '+56 9 XXXX XXXX'],
+  ['@diegostudiobarber', '@tu_instagram'],
+  ['San Miguel, Santiago', 'Tu ciudad'],
+  ['San Miguel', 'Tu ciudad'],
+  ['Brayan Mondaca G.', '[Nombre del desarrollador]']
+];
+
+// 3) Pedir a los buscadores que no la indexen, aplicar los reemplazos y
+//    quitar Firebase: en la demo no se usa, así que no se cargan sus scripts
+//    ni se publican los identificadores del proyecto.
+const SDK_FIREBASE = /\s*<script src="https:\/\/www\.gstatic\.com\/firebasejs\/[^"]+"><\/script>/g;
 for (const archivo of fs.readdirSync(SALIDA).filter(f => f.endsWith('.html'))) {
   const ruta = path.join(SALIDA, archivo);
-  const html = fs.readFileSync(ruta, 'utf8').replace('<meta charset="utf-8">', '<meta charset="utf-8">\n  <meta name="robots" content="noindex, nofollow">');
+  let html = fs.readFileSync(ruta, 'utf8')
+    .replace('<meta charset="utf-8">', '<meta charset="utf-8">\n  <meta name="robots" content="noindex, nofollow">')
+    .replace(SDK_FIREBASE, '');
+  for (const [buscar, poner] of REEMPLAZOS) html = html.split(buscar).join(poner);
   fs.writeFileSync(ruta, html);
 }
+// Configuración de Firebase vacía (la demo no se conecta a ninguna base de datos).
+fs.writeFileSync(
+  path.join(SALIDA, 'js', 'firebase-config.js'),
+  '// Versión demo: no se usa Firebase.\nconst fdb = null;\n'
+);
 fs.writeFileSync(path.join(SALIDA, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
 
 console.log('Demo generada en demo-build/');
