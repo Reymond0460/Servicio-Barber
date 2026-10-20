@@ -59,7 +59,9 @@ for (const archivo of fs.readdirSync(SALIDA).filter(f => f.endsWith('.html'))) {
   const ruta = path.join(SALIDA, archivo);
   let html = fs.readFileSync(ruta, 'utf8')
     .replace('<meta charset="utf-8">', '<meta charset="utf-8">\n  <meta name="robots" content="noindex, nofollow">')
-    .replace(SDK_FIREBASE, '');
+    .replace(SDK_FIREBASE, '')
+    // Quitar los comentarios HTML: pueden guardar enlaces o datos reales que se ven en "ver código fuente".
+    .replace(/<!--[\s\S]*?-->/g, '');
   for (const [buscar, poner] of REEMPLAZOS) html = html.split(buscar).join(poner);
   fs.writeFileSync(ruta, html);
 }
