@@ -33,7 +33,7 @@ Las carpetas `documentos/` e `instructivo/` no se publican (ver `firebase.json`)
 
 ## Versión demo
 
-Sitio aparte donde cualquiera puede probar la reserva y el panel **sin tocar los datos reales**: https://diegostudiobarber-demo.web.app
+Sitio aparte donde cualquiera puede probar la reserva y el panel **sin tocar los datos reales**: https://studiobarber-demo.web.app
 
 - Usa datos de ejemplo guardados en el navegador de cada visitante (`js/demo.js`). No usa Firebase ni inicio de sesión.
 - Se activa con `MODO_DEMO` en `js/modo.js`, que en la página real siempre queda en `false`.
