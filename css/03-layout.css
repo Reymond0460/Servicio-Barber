@@ -68,3 +68,15 @@ footer {
   text-decoration: none;
 }
 .acceso:hover { color: var(--mut); }
+
+/* Crédito del desarrollador en el pie de página */
+.creditos {
+  color: var(--mut-dark);
+  font-size: 13px;
+}
+.creditos a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.creditos a:hover { text-decoration: underline; }
