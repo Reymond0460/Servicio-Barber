@@ -155,7 +155,7 @@ function conectar() {
   }, mostrarErrorBD);
   Store.onIngresos(l => { D.ingresos = l; render(); }, mostrarErrorBD);
   Store.onClients(l => { D.clients = l; render(); }, mostrarErrorBD);
-  // Horario y textos de la página (editor "Mi horario" y "Mi página", ver js/editor.js)
+  // Horario de atención (editor "Mi horario", ver js/editor.js)
   Store.onSettings(datos => { AJUSTES = fusionarAjustes(datos); edCargar(false); render(); }, edErrorAjustes);
 }
 

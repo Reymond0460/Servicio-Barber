@@ -1,8 +1,8 @@
 /* =====================================================================
-   EDITOR DEL PANEL (admin.html): "Mi horario" y "Mi página"
-   Aquí el barbero elige qué días y horas atiende, sus días libres y qué
-   textos mostrar u ocultar en su página. Se guarda como un solo documento
-   en Firestore (settings/sitio) y la página de clientes lo lee en tiempo real.
+   EDITOR DE HORARIO DEL PANEL (admin.html, sección "Mi horario")
+   Aquí el barbero elige qué días y horas atiende, la duración de cada hora,
+   una pausa y sus días libres. Se guarda como un documento en Firestore
+   (settings/sitio) y la página de clientes lo lee en tiempo real.
 
    Funciones (las usa js/admin.js):
      edConstruir()        arma las filas de los días (se llama una vez)
@@ -12,8 +12,6 @@
 
 const ED_DIAS_ORDEN = [1, 2, 3, 4, 5, 6, 0];   // la semana empieza en lunes
 const ED_NOMBRES = { 0: 'Domingo', 1: 'Lunes', 2: 'Martes', 3: 'Miércoles', 4: 'Jueves', 5: 'Viernes', 6: 'Sábado' };
-const ED_MOSTRAR = ['servicios', 'trabajos', 'insignia', 'etiquetas', 'whatsapp', 'instagram'];
-const ED_TEXTOS = ['nombre', 'ciudad', 'insignia', 'etiquetas', 'titulo', 'subtitulo', 'whatsapp', 'instagram'];
 
 let edLibres = [];      // días libres que se están editando ('2026-12-25', ...)
 let edListo = false;    // true cuando ya se llenaron los campos con lo guardado
@@ -36,7 +34,6 @@ function edConstruir() {
   });
   $('ed-libre-add').onclick = edAgregarLibre;
   $('ed-guardar-horario').onclick = edGuardarHorario;
-  $('ed-guardar-pagina').onclick = edGuardarPagina;
 }
 
 function edAplicarAbierto(fila) {
@@ -46,7 +43,7 @@ function edAplicarAbierto(fila) {
 }
 
 /* ---------- Llenar los campos con lo guardado ---------- */
-async function edCargar(forzar) {
+function edCargar(forzar) {
   if (edListo && !forzar) return;     // no pisar lo que el barbero está escribiendo
   edListo = true;
 
@@ -65,30 +62,6 @@ async function edCargar(forzar) {
   $('ed-adelante').value = h.diasAdelante;
   edLibres = [...h.diasLibres];
   edDibujarLibres();
-
-  // "Mi página": lo guardado; si algo está vacío, se muestra lo que dice hoy la página
-  const p = AJUSTES.pagina, actual = await edValoresDePagina();
-  ED_TEXTOS.forEach(k => { $('ed-' + k).value = p[k] || actual[k] || ''; });
-  ED_MOSTRAR.forEach(k => { $('ed-m-' + k).checked = p.mostrar[k]; });
-}
-
-// Lee index.html y devuelve los textos actuales de la página (para mostrarlos como punto de partida)
-async function edValoresDePagina() {
-  try {
-    const r = await fetch('index.html', { cache: 'no-store' });
-    const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
-    const t = k => { const e = doc.querySelector(`[data-aj="${k}"]`); return e ? e.textContent.trim() : ''; };
-    const titulo = doc.querySelector('[data-aj="titulo"]');
-    if (titulo) titulo.querySelectorAll('br').forEach(b => b.replaceWith('\n'));
-    const etiquetas = [...doc.querySelectorAll('[data-aj="etiquetas"] span')].map(s => s.textContent.trim()).join(', ');
-    const wa = doc.querySelector('a[data-aj="whatsapp"]'), ig = doc.querySelector('a[data-aj="instagram"]');
-    return {
-      nombre: t('nombre'), ciudad: t('ciudad'), insignia: t('insignia'), subtitulo: t('subtitulo'),
-      titulo: titulo ? titulo.textContent.trim() : '', etiquetas,
-      whatsapp: wa ? ((wa.getAttribute('href') + ' ' + wa.textContent).match(/\d{8,15}/g) || [''])[0].replace(/\D/g, '') || wa.textContent.replace(/\D/g, '') : '',
-      instagram: ig ? (ig.getAttribute('href').match(/instagram\.com\/([A-Za-z0-9._]+)/) || [, ''])[1] : ''
-    };
-  } catch (e) { return {}; }
 }
 
 /* ---------- Días libres ---------- */
@@ -149,29 +122,12 @@ async function edGuardarHorario() {
   const fuera = edReservasFuera(r.horario);
   $('ed-guardar-horario').disabled = true;
   try {
-    await Store.saveSettings({ horario: r.horario, pagina: AJUSTES.pagina });
-    AJUSTES = fusionarAjustes({ horario: r.horario, pagina: AJUSTES.pagina });
-    await edCargar(true);
+    await Store.saveSettings({ horario: r.horario });
+    AJUSTES = fusionarAjustes({ horario: r.horario });
+    edCargar(true);
     edMensaje('ed-msg-horario', '¡Horario guardado! Ya lo ven tus clientes.' + (fuera ? ` Ojo: ${fuera} reserva(s) futura(s) quedaron fuera del nuevo horario; siguen vigentes, revísalas en la agenda.` : ''), true);
   } catch (e) { edErrorGuardar('ed-msg-horario', e); }
   $('ed-guardar-horario').disabled = false;
-}
-
-/* ---------- Guardar página ---------- */
-async function edGuardarPagina() {
-  const pagina = { mostrar: {} };
-  ED_TEXTOS.forEach(k => { pagina[k] = $('ed-' + k).value; });
-  ED_MOSTRAR.forEach(k => { pagina.mostrar[k] = $('ed-m-' + k).checked; });
-  const limpia = fusionarAjustes({ pagina }).pagina;           // recorta y limpia todo
-  if (pagina.whatsapp.trim() && !/^\d{8,15}$/.test(limpia.whatsapp)) return edMensaje('ed-msg-pagina', 'El WhatsApp debe tener solo números, con código de país (ej. 56912345678).', false);
-  if (pagina.instagram.trim() && !limpia.instagram) return edMensaje('ed-msg-pagina', 'El usuario de Instagram solo puede tener letras, números, punto y guion bajo.', false);
-  $('ed-guardar-pagina').disabled = true;
-  try {
-    await Store.saveSettings({ horario: AJUSTES.horario, pagina: limpia });
-    AJUSTES = fusionarAjustes({ horario: AJUSTES.horario, pagina: limpia });
-    edMensaje('ed-msg-pagina', '¡Cambios guardados! Ya se ven en tu página.', true);
-  } catch (e) { edErrorGuardar('ed-msg-pagina', e); }
-  $('ed-guardar-pagina').disabled = false;
 }
 
 function edErrorGuardar(id, e) {

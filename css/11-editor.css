@@ -1,5 +1,5 @@
 /* =====================================================================
-   11 · EDITOR DEL PANEL  ("Mi horario" y "Mi página" en admin.html)
+   11 · EDITOR DEL PANEL  ("Mi horario" en admin.html)
    ===================================================================== */
 
 .ed-card {
@@ -92,12 +92,6 @@
   line-height: 1;
 }
 .ed-chip button:hover { background: var(--card-hover); }
-
-/* ---------- Mi página ---------- */
-.ed-campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-.ed-campos label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--mut); margin: 0; }
-.ed-campos input, .ed-campos textarea { width: 100% !important; font-family: inherit; }
-.ed-toggles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
 
 .ed-card .cta { align-self: flex-start; }
 

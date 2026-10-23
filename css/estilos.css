@@ -15,7 +15,7 @@
    Panel de Diego ........................... 08-admin.css
    Ajustes para celular ..................... 09-responsive.css
    Privacidad, cookies y términos ........... 10-legal.css
-   Editor del panel (horario y página) ...... 11-editor.css
+   Editor del panel (horario) ............. 11-editor.css
    ===================================================================== */
 @import url("01-variables.css");
 @import url("02-base.css");

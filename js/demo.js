@@ -54,11 +54,11 @@ function demoEscuchar(cb, extraer) {
 const demoId = () => 'd' + Date.now() + Math.floor(Math.random() * 1000);
 
 const StoreDemo = {
-  // Ajustes de horario y de la página (se guardan en el navegador, como todo en la demo)
+  // Ajustes de horario (se guardan en el navegador, como todo en la demo)
   onSettings: (cb) => demoEscuchar(cb, s => s.settings || {}),
   async saveSettings(ajustes) {
     const s = demoLeer();
-    s.settings = { horario: ajustes.horario, pagina: ajustes.pagina };
+    s.settings = { horario: ajustes.horario };
     demoGuardar(s);
   },
 

@@ -14,8 +14,8 @@
    ocupadas, y crear reservas. Todo lo demás es solo para la cuenta de Diego.
    ===================================================================== */
 
-// ---------- Horario y página: valores iniciales ----------
-// El barbero los cambia desde el panel (secciones "Mi horario" y "Mi página"); lo que guarda ahí
+// ---------- Horario: valores iniciales ----------
+// El barbero los cambia desde el panel (sección "Mi horario"); lo que guarda ahí
 // reemplaza estos valores. Se guarda en Firestore (colección settings, documento "sitio").
 const AJUSTES_BASE = {
   horario: {
@@ -33,11 +33,6 @@ const AJUSTES_BASE = {
     descanso: { activo: false, desde: '13:00', hasta: '14:00' }, // pausa (almuerzo) sin reservas
     diasLibres: [],                                           // fechas sueltas cerradas, ej. '2026-12-25'
     diasAdelante: 60                                          // hasta cuántos días adelante se reserva
-  },
-  // Textos vacíos = se usa lo que ya dice la página (index.html). Si el barbero escribe algo, reemplaza.
-  pagina: {
-    nombre: '', ciudad: '', insignia: '', titulo: '', subtitulo: '', etiquetas: '', whatsapp: '', instagram: '',
-    mostrar: { servicios: true, trabajos: true, whatsapp: true, instagram: true, insignia: true, etiquetas: true }
   }
 };
 const DURACIONES = [30, 45, 60, 90, 120];   // opciones de duración en el panel
@@ -62,16 +57,15 @@ function horaPasada(dia, hora) {
   return new Date() > new Date(inicio.getTime() + MINUTOS_DE_GRACIA * 60000);
 }
 
-/* ---------- Ajustes de horario y página (se leen de Firestore y se mezclan con AJUSTES_BASE) ---------- */
+/* ---------- Ajustes de horario (se leen de Firestore y se mezclan con AJUSTES_BASE) ---------- */
 const horaValida = s => (/^([01]\d|2[0-3]):[0-5]\d$/.test(String(s)) ? String(s) : null);
 const aMin = hhmm => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };       // '10:30' -> 630
 const deMin = min => String(Math.floor(min / 60)).padStart(2, '0') + ':' + String(min % 60).padStart(2, '0');
 const fechaDe = key => { const [y, m, d] = key.split('-').map(Number); return new Date(y, m - 1, d); }; // '2026-10-21' -> Date
-const recortar = (v, max) => String(v == null ? '' : v).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').trim().slice(0, max);
 
 // Mezcla lo guardado con los valores iniciales y descarta lo inválido: así la página nunca se rompe.
 function fusionarAjustes(guardado) {
-  const g = guardado || {}, h = g.horario || {}, p = g.pagina || {};
+  const g = guardado || {}, h = g.horario || {};
   const a = JSON.parse(JSON.stringify(AJUSTES_BASE));
 
   for (let d = 0; d <= 6; d++) {
@@ -92,11 +86,6 @@ function fusionarAjustes(guardado) {
   const adelante = parseInt(h.diasAdelante, 10);
   if (adelante >= 7 && adelante <= 365) a.horario.diasAdelante = adelante;
 
-  const largos = { nombre: 60, ciudad: 60, insignia: 80, titulo: 120, subtitulo: 220, etiquetas: 120, whatsapp: 15, instagram: 30 };
-  for (const k in largos) a.pagina[k] = recortar(p[k], largos[k]);
-  a.pagina.whatsapp = a.pagina.whatsapp.replace(/\D/g, '');
-  a.pagina.instagram = a.pagina.instagram.replace(/^@/, '').replace(/[^A-Za-z0-9._]/g, '');
-  for (const k in a.pagina.mostrar) if (p.mostrar && typeof p.mostrar[k] === 'boolean') a.pagina.mostrar[k] = p.mostrar[k];
   return a;
 }
 
@@ -141,13 +130,13 @@ const StoreFirebase = {
     }, onError);
   },
 
-  // Ajustes de horario y de la página (público: la página de clientes los necesita para mostrar las horas).
+  // Ajustes de horario (público: la página de clientes los necesita para mostrar las horas).
   onSettings(cb, onError) {
     return fdb.collection('settings').doc('sitio').onSnapshot(snap => cb(snap.exists ? snap.data() : {}), onError);
   },
   // Solo Diego (con sesión iniciada) puede guardarlos.
   saveSettings(ajustes) {
-    return fdb.collection('settings').doc('sitio').set({ horario: ajustes.horario, pagina: ajustes.pagina, updatedAt: ts() });
+    return fdb.collection('settings').doc('sitio').set({ horario: ajustes.horario, updatedAt: ts() });
   },
 
   // Crea el primer servicio (solo lo hace el panel de Diego si no hay ninguno).

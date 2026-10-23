@@ -85,37 +85,6 @@
       <p class="msg" id="ed-msg-horario" role="status"></p>
     </div>
   </section>
-
-  <!-- ===== EDITOR: Mi página ===== -->
-  <section id="editor-pagina" style="margin-top:48px">
-    <h2>Mi página</h2>
-    <p class="note">Cambia los textos de tu página y elige qué mostrar. Si dejas un texto vacío, se mantiene el que ya tiene la página.</p>
-    <div class="ed-card">
-      <div class="ed-campos">
-        <label for="ed-nombre">Nombre del negocio<input id="ed-nombre" maxlength="60"></label>
-        <label for="ed-ciudad">Ciudad o sector<input id="ed-ciudad" maxlength="60"></label>
-        <label for="ed-insignia">Frase de la insignia<input id="ed-insignia" maxlength="80"></label>
-        <label for="ed-etiquetas">Etiquetas (separadas por coma)<input id="ed-etiquetas" maxlength="120"></label>
-        <label for="ed-titulo">Título grande (una línea por renglón)<textarea id="ed-titulo" rows="2" maxlength="120"></textarea></label>
-        <label for="ed-subtitulo">Texto de presentación<textarea id="ed-subtitulo" rows="2" maxlength="220"></textarea></label>
-        <label for="ed-whatsapp">WhatsApp (con código de país, ej. 56912345678)<input id="ed-whatsapp" inputmode="numeric" maxlength="20"></label>
-        <label for="ed-instagram">Instagram (usuario, sin @)<input id="ed-instagram" maxlength="30"></label>
-      </div>
-
-      <b>Qué mostrar en la página</b>
-      <div class="ed-toggles">
-        <label class="ed-check"><input type="checkbox" id="ed-m-servicios"> Servicios</label>
-        <label class="ed-check"><input type="checkbox" id="ed-m-trabajos"> Fotos de trabajos</label>
-        <label class="ed-check"><input type="checkbox" id="ed-m-insignia"> Insignia de la portada</label>
-        <label class="ed-check"><input type="checkbox" id="ed-m-etiquetas"> Etiquetas de la portada</label>
-        <label class="ed-check"><input type="checkbox" id="ed-m-whatsapp"> WhatsApp</label>
-        <label class="ed-check"><input type="checkbox" id="ed-m-instagram"> Instagram</label>
-      </div>
-
-      <button class="cta" id="ed-guardar-pagina" type="button">Guardar cambios de la página</button>
-      <p class="msg" id="ed-msg-pagina" role="status"></p>
-    </div>
-  </section>
 </main>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>

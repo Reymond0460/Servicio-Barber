@@ -195,12 +195,11 @@ function renderTodo() {
 Store.onServices(list => { S.services = list; serviciosCargados = true; renderTodo(); }, mostrarErrorBD);
 Store.onSlots(list => { S.slots = list; renderTodo(); }, mostrarErrorBD);
 
-// Horario y textos que el barbero configuró en su panel. Si aún no se pueden leer (por ejemplo, antes de
+// Horario que el barbero configuró en su panel. Si aún no se pueden leer (por ejemplo, antes de
 // publicar las reglas de Firestore), no se muestra ningún error: la página usa los valores iniciales.
 Store.onSettings(datos => {
   AJUSTES = fusionarAjustes(datos);
   if (sel.date && !diaDisponible(sel.date)) { sel.date = null; sel.time = null; }   // el barbero cerró ese día
-  aplicarPagina(AJUSTES.pagina);
   renderTodo();
 }, e => console.warn('No se pudieron leer los ajustes; se usan los valores iniciales.', e && e.code));
 renderTodo();
