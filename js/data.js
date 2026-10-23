@@ -14,10 +14,33 @@
    ocupadas, y crear reservas. Todo lo demás es solo para la cuenta de Diego.
    ===================================================================== */
 
-// ---------- Configuración que puedes cambiar ----------
-const TIMES = ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00'];
-const CLOSED_DAYS = [0];        // días sin atención (0 = domingo ... 6 = sábado)
-const MAX_DAYS_AHEAD = 60;      // hasta cuántos días adelante se puede reservar
+// ---------- Horario y página: valores iniciales ----------
+// El barbero los cambia desde el panel (secciones "Mi horario" y "Mi página"); lo que guarda ahí
+// reemplaza estos valores. Se guarda en Firestore (colección settings, documento "sitio").
+const AJUSTES_BASE = {
+  horario: {
+    // Por día (0 = domingo ... 6 = sábado). "hasta" es la hora de cierre.
+    dias: {
+      0: { abierto: false, desde: '10:00', hasta: '20:00' },
+      1: { abierto: true,  desde: '10:00', hasta: '20:00' },
+      2: { abierto: true,  desde: '10:00', hasta: '20:00' },
+      3: { abierto: true,  desde: '10:00', hasta: '20:00' },
+      4: { abierto: true,  desde: '10:00', hasta: '20:00' },
+      5: { abierto: true,  desde: '10:00', hasta: '20:00' },
+      6: { abierto: true,  desde: '10:00', hasta: '20:00' }
+    },
+    duracionMin: 60,                                          // largo de cada hora reservable
+    descanso: { activo: false, desde: '13:00', hasta: '14:00' }, // pausa (almuerzo) sin reservas
+    diasLibres: [],                                           // fechas sueltas cerradas, ej. '2026-12-25'
+    diasAdelante: 60                                          // hasta cuántos días adelante se reserva
+  },
+  // Textos vacíos = se usa lo que ya dice la página (index.html). Si el barbero escribe algo, reemplaza.
+  pagina: {
+    nombre: '', ciudad: '', insignia: '', titulo: '', subtitulo: '', etiquetas: '', whatsapp: '', instagram: '',
+    mostrar: { servicios: true, trabajos: true, whatsapp: true, instagram: true, insignia: true, etiquetas: true }
+  }
+};
+const DURACIONES = [30, 45, 60, 90, 120];   // opciones de duración en el panel
 const POLICY_VERSION = '2026-10-19';   // cambia esta fecha cuando se modifique la política de privacidad
 const MINUTOS_DE_GRACIA = 30;   // una hora sigue reservable hasta 30 min después de empezar
                                 // (ej. a las 11:17 aún se puede reservar las 11:00; a las 11:45 ya no)
@@ -39,6 +62,66 @@ function horaPasada(dia, hora) {
   return new Date() > new Date(inicio.getTime() + MINUTOS_DE_GRACIA * 60000);
 }
 
+/* ---------- Ajustes de horario y página (se leen de Firestore y se mezclan con AJUSTES_BASE) ---------- */
+const horaValida = s => (/^([01]\d|2[0-3]):[0-5]\d$/.test(String(s)) ? String(s) : null);
+const aMin = hhmm => { const [h, m] = hhmm.split(':').map(Number); return h * 60 + m; };       // '10:30' -> 630
+const deMin = min => String(Math.floor(min / 60)).padStart(2, '0') + ':' + String(min % 60).padStart(2, '0');
+const fechaDe = key => { const [y, m, d] = key.split('-').map(Number); return new Date(y, m - 1, d); }; // '2026-10-21' -> Date
+const recortar = (v, max) => String(v == null ? '' : v).replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f]/g, '').trim().slice(0, max);
+
+// Mezcla lo guardado con los valores iniciales y descarta lo inválido: así la página nunca se rompe.
+function fusionarAjustes(guardado) {
+  const g = guardado || {}, h = g.horario || {}, p = g.pagina || {};
+  const a = JSON.parse(JSON.stringify(AJUSTES_BASE));
+
+  for (let d = 0; d <= 6; d++) {
+    const x = (h.dias || {})[d];
+    if (!x) continue;
+    const desde = horaValida(x.desde) || a.horario.dias[d].desde;
+    const hasta = horaValida(x.hasta) || a.horario.dias[d].hasta;
+    a.horario.dias[d] = { abierto: !!x.abierto, desde, hasta: aMin(hasta) > aMin(desde) ? hasta : a.horario.dias[d].hasta };
+  }
+  if (DURACIONES.includes(Number(h.duracionMin))) a.horario.duracionMin = Number(h.duracionMin);
+  if (h.descanso) {
+    const d1 = horaValida(h.descanso.desde), d2 = horaValida(h.descanso.hasta);
+    if (d1 && d2 && aMin(d2) > aMin(d1)) a.horario.descanso = { activo: !!h.descanso.activo, desde: d1, hasta: d2 };
+  }
+  if (Array.isArray(h.diasLibres)) {
+    a.horario.diasLibres = [...new Set(h.diasLibres.filter(k => /^\d{4}-\d{2}-\d{2}$/.test(k)))].sort();
+  }
+  const adelante = parseInt(h.diasAdelante, 10);
+  if (adelante >= 7 && adelante <= 365) a.horario.diasAdelante = adelante;
+
+  const largos = { nombre: 60, ciudad: 60, insignia: 80, titulo: 120, subtitulo: 220, etiquetas: 120, whatsapp: 15, instagram: 30 };
+  for (const k in largos) a.pagina[k] = recortar(p[k], largos[k]);
+  a.pagina.whatsapp = a.pagina.whatsapp.replace(/\D/g, '');
+  a.pagina.instagram = a.pagina.instagram.replace(/^@/, '').replace(/[^A-Za-z0-9._]/g, '');
+  for (const k in a.pagina.mostrar) if (p.mostrar && typeof p.mostrar[k] === 'boolean') a.pagina.mostrar[k] = p.mostrar[k];
+  return a;
+}
+
+let AJUSTES = fusionarAjustes({});   // ajustes vigentes; las páginas lo actualizan cuando llegan los datos
+
+// Horas reservables de un día, según el horario del barbero. Ej.: ['10:00', '11:00', ...]
+function horasDelDia(fecha, aj = AJUSTES) {
+  const h = aj.horario, cfg = h.dias[fecha.getDay()];
+  if (!cfg || !cfg.abierto || h.diasLibres.includes(dayKey(fecha))) return [];
+  const dur = h.duracionMin, fin = aMin(cfg.hasta), pausa = h.descanso;
+  const horas = [];
+  for (let m = aMin(cfg.desde); m + dur <= fin; m += dur) {
+    if (pausa.activo && m < aMin(pausa.hasta) && m + dur > aMin(pausa.desde)) continue;   // cae en la pausa
+    horas.push(deMin(m));
+  }
+  return horas;
+}
+
+// ¿Atiende ese día? (abierto, no es un día libre y tiene al menos una hora)
+const diaAbierto = (fecha, aj = AJUSTES) => horasDelDia(fecha, aj).length > 0;
+
+// ¿Esta hora choca con alguna ya reservada? (si cambió la duración, las horas vecinas también se bloquean)
+const horaOcupada = (hora, reservadas, aj = AJUSTES) =>
+  reservadas.some(r => Math.abs(aMin(r) - aMin(hora)) < aj.horario.duracionMin);
+
 // Teléfono chileno: acepta 912345678, 56912345678 o +56912345678 y lo deja como +56912345678.
 // Devuelve null si no es válido.
 function normalizarTelefono(texto) {
@@ -56,6 +139,15 @@ const StoreFirebase = {
     return fdb.collection('services').onSnapshot(snap => {
       cb(snap.docs.map(d => ({ id: d.id, ...d.data() })).sort((a, b) => (a.createdAt?.seconds || 0) - (b.createdAt?.seconds || 0)));
     }, onError);
+  },
+
+  // Ajustes de horario y de la página (público: la página de clientes los necesita para mostrar las horas).
+  onSettings(cb, onError) {
+    return fdb.collection('settings').doc('sitio').onSnapshot(snap => cb(snap.exists ? snap.data() : {}), onError);
+  },
+  // Solo Diego (con sesión iniciada) puede guardarlos.
+  saveSettings(ajustes) {
+    return fdb.collection('settings').doc('sitio').set({ horario: ajustes.horario, pagina: ajustes.pagina, updatedAt: ts() });
   },
 
   // Crea el primer servicio (solo lo hace el panel de Diego si no hay ninguno).

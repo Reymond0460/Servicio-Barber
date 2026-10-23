@@ -14,8 +14,9 @@ let moviendo = null;   // id de la reserva a la que Diego está cambiando la hor
 
 // Selector para cambiar la hora de una reserva: muestra solo las horas libres de ese día.
 function selectorHora(a) {
-  const tomadas = D.appts.filter(x => x.date === a.date && x.status !== 'noshow').map(x => x.time);
-  const libres = TIMES.filter(t => !tomadas.includes(t));
+  // Horas del día según el horario del barbero, menos las que chocan con OTRAS reservas (la propia no cuenta).
+  const tomadas = D.appts.filter(x => x.date === a.date && x.status !== 'noshow' && x.id !== a.id).map(x => x.time);
+  const libres = horasDelDia(fechaDe(a.date)).filter(t => t !== a.time && !horaOcupada(t, tomadas));
   if (!libres.length) return `<div class="acts"><span class="note">No quedan horas libres hoy.</span><button data-a="cancel" data-id="${a.id}">Cancelar</button></div>`;
   return `
     <div class="acts">
@@ -154,7 +155,11 @@ function conectar() {
   }, mostrarErrorBD);
   Store.onIngresos(l => { D.ingresos = l; render(); }, mostrarErrorBD);
   Store.onClients(l => { D.clients = l; render(); }, mostrarErrorBD);
+  // Horario y textos de la página (editor "Mi horario" y "Mi página", ver js/editor.js)
+  Store.onSettings(datos => { AJUSTES = fusionarAjustes(datos); edCargar(false); render(); }, edErrorAjustes);
 }
+
+edConstruir();   // arma las filas del editor de horario
 
 if (MODO_DEMO) {
   // En la demo no hay inicio de sesión: el panel se muestra de inmediato con datos de ejemplo.

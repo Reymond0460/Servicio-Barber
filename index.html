@@ -11,10 +11,10 @@
 
   <!-- ===== CABECERA ===== -->
   <header>
-    <div class="brand"><img class="logo" src="img/logo.jpeg" alt="">DiegoStudioBarber</div>
+    <div class="brand"><img class="logo" src="img/logo.jpeg" alt=""><span data-aj="nombre">DiegoStudioBarber</span></div>
     <nav>
-      <a href="#servicios">Servicios</a>
-      <a href="#trabajos">Trabajos</a>
+      <a href="#servicios" data-aj-nav="servicios">Servicios</a>
+      <a href="#trabajos" data-aj-nav="trabajos">Trabajos</a>
       <a href="#reservar">Reservar</a>
     </nav>
   </header>
@@ -23,10 +23,10 @@
   <div class="hero-bg">
     <section class="wrap hero">
       <div>
-        <div class="badge">Más de 7 años de experiencia</div>
-        <h1>Fade, barba<br>y perfilado.</h1>
-        <div class="tags"><span>Fade</span><span>Barba</span><span>Perfilado</span></div>
-        <p>Agenda tu hora online en segundos. Sin pago previo: pagas en la barbería después del corte.</p>
+        <div class="badge" data-aj="insignia">Más de 7 años de experiencia</div>
+        <h1 data-aj="titulo">Fade, barba<br>y perfilado.</h1>
+        <div class="tags" data-aj="etiquetas"><span>Fade</span><span>Barba</span><span>Perfilado</span></div>
+        <p data-aj="subtitulo">Agenda tu hora online en segundos. Sin pago previo: pagas en la barbería después del corte.</p>
         <a class="cta" href="#reservar">Agendar mi hora</a>
       </div>
       <div><img class="herologo" src="img/logo.jpeg" alt="DiegoStudioBarber"></div>
@@ -48,7 +48,7 @@
       <figure><img src="img/ej.3.png" alt="Corte realizado por Diego" loading="lazy"></figure>
       <figure><img src="img/ej.4.png" alt="Corte realizado por Diego" loading="lazy"></figure>
     </div>
-    <p class="note" style="margin-top:12px">Más trabajos en <a href="https://www.instagram.com/diegostudiobarber/" target="_blank" rel="noopener">@diegostudiobarber</a></p>
+    <p class="note" data-aj-bloque="instagram-nota" style="margin-top:12px">Más trabajos en <a href="https://www.instagram.com/diegostudiobarber/" target="_blank" rel="noopener" data-aj="instagram">@diegostudiobarber</a></p>
   </section>
 
   <!-- ===== RESERVA ===== -->
@@ -66,8 +66,8 @@
   </section>
 
   <footer>
-    <span>DiegoStudioBarber · San Miguel</span>
-    <span><a href="https://wa.me/56984195182" target="_blank" rel="noopener">WhatsApp +56 9 8419 5182</a> · <a href="https://www.instagram.com/diegostudiobarber/" target="_blank" rel="noopener">@diegostudiobarber</a></span>
+    <span><span data-aj="nombre">DiegoStudioBarber</span> · <span data-aj="ciudad">San Miguel</span></span>
+    <span><span data-aj-bloque="whatsapp"><a href="https://wa.me/56984195182" target="_blank" rel="noopener" data-aj="whatsapp">WhatsApp +56 9 8419 5182</a></span><span data-aj-bloque="instagram"><span data-aj-sep> · </span><a href="https://www.instagram.com/diegostudiobarber/" target="_blank" rel="noopener" data-aj="instagram">@diegostudiobarber</a></span></span>
     <span class="legales"><a href="politica-de-privacidad.html">Privacidad</a> · <a href="cookies.html">Cookies</a> · <a href="terminos.html">Términos</a></span>
     <span class="creditos">Desarrollado por <a href="https://tiforti.web.app/" target="_blank" rel="noopener">TIforTi</a></span>
     <a class="acceso" href="admin.html">Acceso</a>
@@ -79,6 +79,7 @@
   <script src="js/modo.js"></script>
   <script src="js/demo.js"></script>
   <script src="js/data.js"></script>
+  <script src="js/pagina.js"></script>
   <script src="js/reservas.js"></script>
 </body>
 </html>

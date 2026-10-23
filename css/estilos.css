@@ -14,6 +14,8 @@
    Calendario, horas y datos del cliente .... 07-reserva.css
    Panel de Diego ........................... 08-admin.css
    Ajustes para celular ..................... 09-responsive.css
+   Privacidad, cookies y términos ........... 10-legal.css
+   Editor del panel (horario y página) ...... 11-editor.css
    ===================================================================== */
 @import url("01-variables.css");
 @import url("02-base.css");
@@ -25,3 +27,4 @@
 @import url("08-admin.css");
 @import url("09-responsive.css");
 @import url("10-legal.css");
+@import url("11-editor.css");

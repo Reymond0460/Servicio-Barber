@@ -1,0 +1,107 @@
+/* =====================================================================
+   11 · EDITOR DEL PANEL  ("Mi horario" y "Mi página" en admin.html)
+   ===================================================================== */
+
+.ed-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* En el editor los campos son más compactos que en el resto del panel */
+.ed-card input:not([type="checkbox"]),
+.ed-card select,
+.ed-card textarea {
+  width: auto;
+  margin: 0;
+  padding: 10px 12px;
+  min-height: 44px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line2);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 16px;
+}
+.ed-card input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--accent);
+  flex: 0 0 auto;
+}
+
+/* ---------- Días de la semana ---------- */
+.ed-dias { display: flex; flex-direction: column; gap: 8px; }
+.ed-dia {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.ed-dia.ed-cerrado { opacity: .55; }
+.ed-check {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--text);
+  font-size: 16px;
+  margin: 0;
+}
+.ed-dia .ed-check { min-width: 150px; font-weight: 600; }
+.ed-par { display: inline-flex; gap: 8px; align-items: center; flex-wrap: wrap; color: var(--mut); }
+
+/* ---------- Opciones sueltas ---------- */
+.ed-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+.ed-fila > label:not(.ed-check) { margin: 0; font-size: 16px; color: var(--text); }
+.ed-bloque { display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--line); padding-top: 18px; }
+.ed-bloque .note { margin: 0; }
+
+/* ---------- Días libres (etiquetas) ---------- */
+.ed-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.ed-chip {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  padding: 6px 6px 6px 14px;
+  border: 1px solid var(--line2);
+  border-radius: 999px;
+  font-size: 14px;
+}
+.ed-chip button {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--danger);
+  font-size: 20px;
+  line-height: 1;
+}
+.ed-chip button:hover { background: var(--card-hover); }
+
+/* ---------- Mi página ---------- */
+.ed-campos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+.ed-campos label { display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--mut); margin: 0; }
+.ed-campos input, .ed-campos textarea { width: 100% !important; font-family: inherit; }
+.ed-toggles { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+
+.ed-card .cta { align-self: flex-start; }
+
+@media (max-width: 640px) {
+  .ed-card { padding: 16px; }
+  .ed-dia .ed-check { min-width: 0; width: 100%; }
+}

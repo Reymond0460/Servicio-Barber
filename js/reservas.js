@@ -21,11 +21,12 @@ const sel = {
 
 // Mes que está mostrando el calendario.
 const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
-const ultimo = new Date(hoy); ultimo.setDate(ultimo.getDate() + MAX_DAYS_AHEAD);
+// Último día en que se puede reservar (depende de lo que el barbero configuró en "Mi horario").
+const ultimoDia = () => { const u = new Date(hoy); u.setDate(u.getDate() + AJUSTES.horario.diasAdelante); return u; };
 let vista = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
 
-// ¿Se puede reservar este día? (no pasado, no cerrado, dentro del límite)
-const diaDisponible = d => d >= hoy && d <= ultimo && !CLOSED_DAYS.includes(d.getDay());
+// ¿Se puede reservar este día? (no pasado, dentro del límite, y el barbero atiende ese día)
+const diaDisponible = d => d >= hoy && d <= ultimoDia() && diaAbierto(d);
 
 /* ---------- Servicios ---------- */
 function renderServicios() {
@@ -64,7 +65,7 @@ function renderCalendario() {
   }
 
   const puedeAtras = new Date(anio, mes, 0) >= hoy;            // hay días en el mes anterior
-  const puedeAdelante = new Date(anio, mes + 1, 1) <= ultimo;  // hay días en el mes siguiente
+  const puedeAdelante = new Date(anio, mes + 1, 1) <= ultimoDia();  // hay días en el mes siguiente
 
   $('cal').innerHTML = `
     <div class="cal-head">
@@ -99,8 +100,10 @@ function renderHoras() {
   const ocupadas = S.slots.filter(a => a.date === dayKey(sel.date)).map(a => a.time);
   // Las horas que ya pasaron (hoy) se muestran como no disponibles.
   if (sel.time && horaPasada(sel.date, sel.time)) sel.time = null;
-  $('slots').innerHTML = TIMES.map(t => {
-    const ocupada = ocupadas.includes(t) || horaPasada(sel.date, t);
+  const horas = horasDelDia(sel.date);          // las horas que el barbero dejó disponibles ese día
+  if (!horas.length) { $('slots').innerHTML = '<p class="note">No hay horas disponibles este día.</p>'; return; }
+  $('slots').innerHTML = horas.map(t => {
+    const ocupada = horaOcupada(t, ocupadas) || horaPasada(sel.date, t);
     return `<button class="slot ${ocupada ? 'busy' : ''} ${sel.time === t ? 'sel' : ''}" data-t="${t}">${t}</button>`;
   }).join('');
   $('slots').querySelectorAll('button').forEach(b => {
@@ -191,6 +194,15 @@ function renderTodo() {
 // Conexión en tiempo real: cada vez que cambian los datos, se redibuja la página.
 Store.onServices(list => { S.services = list; serviciosCargados = true; renderTodo(); }, mostrarErrorBD);
 Store.onSlots(list => { S.slots = list; renderTodo(); }, mostrarErrorBD);
+
+// Horario y textos que el barbero configuró en su panel. Si aún no se pueden leer (por ejemplo, antes de
+// publicar las reglas de Firestore), no se muestra ningún error: la página usa los valores iniciales.
+Store.onSettings(datos => {
+  AJUSTES = fusionarAjustes(datos);
+  if (sel.date && !diaDisponible(sel.date)) { sel.date = null; sel.time = null; }   // el barbero cerró ese día
+  aplicarPagina(AJUSTES.pagina);
+  renderTodo();
+}, e => console.warn('No se pudieron leer los ajustes; se usan los valores iniciales.', e && e.code));
 renderTodo();
 
 // Cada minuto se revisa qué horas ya pasaron, sin tocar lo que el cliente está escribiendo.

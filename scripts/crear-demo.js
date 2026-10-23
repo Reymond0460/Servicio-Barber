@@ -72,6 +72,7 @@ for (const archivo of fs.readdirSync(SALIDA).filter(f => f.endsWith('.html'))) {
     .replace(SDK_FIREBASE, '')
     // En la demo no se muestra Instagram: se quitan el párrafo «Más trabajos en…» y el enlace del pie de página.
     .replace(/\s*<p class="note"[^>]*>Más trabajos en <a href="https:\/\/www\.instagram\.com\/[^"]*"[^>]*>[^<]*<\/a><\/p>/g, '')
+    .replace(/<span data-aj-bloque="instagram">.*?<\/a><\/span>/g, '')   // bloque de Instagram del pie (con su " · ")
     .replace(/ · <a href="https:\/\/www\.instagram\.com\/[^"]*"[^>]*>[^<]*<\/a>/g, '')
     // Quitar los comentarios HTML: pueden guardar enlaces o datos reales que se ven en "ver código fuente".
     .replace(/<!--[\s\S]*?-->/g, '');

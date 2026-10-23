@@ -12,7 +12,7 @@ Sitio de reservas para una barbería, hecho con HTML, CSS y JavaScript, con base
 |---|---|
 | `css/` | Estilos, divididos en módulos numerados. Empieza por `css/estilos.css` |
 | `scripts/` | `crear-demo.js`, que genera la versión demo |
-| `js/` | `modo.js` y `demo.js` (versión demo), `data.js` (configuración y acceso a la base de datos), `reservas.js` (clientes), `admin.js` (panel), `notificaciones.js` (avisos), `firebase-config.js` |
+| `js/` | `editor.js` (editor del panel), `pagina.js` (textos de la página), `modo.js` y `demo.js` (versión demo), `data.js` (configuración y acceso a la base de datos), `reservas.js` (clientes), `admin.js` (panel), `notificaciones.js` (avisos), `firebase-config.js` |
 | `img/` | Logo, fondo y fotos de trabajos |
 | `firestore.rules` | Reglas de seguridad de la base de datos (se pegan en la consola de Firebase) |
 | `firebase.json` | Configuración del hosting de Firebase |
@@ -30,6 +30,15 @@ firebase deploy --only hosting --project barber-diego
 ```
 
 Las carpetas `documentos/` e `instructivo/` no se publican (ver `firebase.json`).
+
+## Editor del panel: horario y página
+
+En `admin.html`, al final del panel, el barbero tiene dos secciones:
+
+- **Mi horario:** días y horas de atención, duración de cada hora (30 a 120 min), pausa de almuerzo, días libres sueltos y hasta cuántos días adelante se reserva.
+- **Mi página:** nombre, ciudad, textos de la portada, WhatsApp e Instagram, y qué mostrar u ocultar (servicios, trabajos, insignia, etiquetas, WhatsApp, Instagram).
+
+Se guarda en un solo documento de Firestore (`settings/sitio`). La página de clientes lo lee en tiempo real (`js/pagina.js` aplica los textos; `js/data.js` calcula las horas con `horasDelDia`). Si el documento no existe o no se puede leer, se usan los valores iniciales de `AJUSTES_BASE` en `js/data.js`. Requiere la regla `settings` de `firestore.rules`.
 
 ## Versión demo
 
