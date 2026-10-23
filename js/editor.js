@@ -15,6 +15,9 @@ const ED_NOMBRES = { 0: 'Domingo', 1: 'Lunes', 2: 'Martes', 3: 'Miércoles', 4: 
 
 let edLibres = [];      // días libres que se están editando ('2026-12-25', ...)
 let edListo = false;    // true cuando ya se llenaron los campos con lo guardado
+let edVista = null;     // mes que muestra el calendario de días libres (primer día del mes)
+let edModo = 'dia';     // 'dia' = un día por toque · 'rango' = varios días seguidos (primer y último toque)
+let edInicioRango = null; // primer día tocado cuando se elige un rango
 
 const edMensaje = (id, texto, ok) => { const m = $(id); m.textContent = texto; m.className = 'msg ' + (ok ? 'ok' : 'err'); };
 const edDuracionTexto = m => (m < 60 ? m + ' min' : m === 60 ? '1 hora' : m === 90 ? '1 hora 30 min' : (m / 60) + ' horas');
@@ -32,7 +35,7 @@ function edConstruir() {
   $('ed-dias').addEventListener('change', e => {
     if (e.target.classList.contains('ed-abierto')) edAplicarAbierto(e.target.closest('.ed-dia'));
   });
-  $('ed-libre-add').onclick = edAgregarLibre;
+  edIniciarCalendario();
   $('ed-guardar-horario').onclick = edGuardarHorario;
 }
 
@@ -65,6 +68,9 @@ function edCargar(forzar) {
 }
 
 /* ---------- Días libres ---------- */
+const edClave = d => dayKey(d);
+const edHoy = () => { const d = new Date(); d.setHours(0, 0, 0, 0); return d; };
+
 function edDibujarLibres() {
   $('ed-libres').innerHTML = edLibres.length
     ? edLibres.map(k => {
@@ -76,14 +82,101 @@ function edDibujarLibres() {
   $('ed-libres').querySelectorAll('button').forEach(b => {
     b.onclick = () => { edLibres = edLibres.filter(k => k !== b.dataset.k); edDibujarLibres(); };
   });
+  $('ed-libre-texto').textContent = edLibres.length
+    ? `${edLibres.length} día${edLibres.length === 1 ? '' : 's'} libre${edLibres.length === 1 ? '' : 's'} · tocar para cambiar`
+    : 'Elegir fechas en el calendario';
+  if (!$('ed-libre-cal').hidden) edDibujarCalendario();   // el calendario abierto se mantiene al día
 }
-function edAgregarLibre() {
-  const k = $('ed-libre-fecha').value;
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) return edMensaje('ed-msg-horario', 'Elige una fecha.', false);
-  if (!edLibres.includes(k)) edLibres = [...edLibres, k].sort();
-  $('ed-libre-fecha').value = '';
-  edDibujarLibres();
-  edMensaje('ed-msg-horario', 'Día libre agregado. Pulsa «Guardar horario» para que quede.', true);
+
+/* ---------- Calendario para elegir los días libres ---------- */
+function edIniciarCalendario() {
+  const abrir = $('ed-libre-abrir'), panel = $('ed-libre-cal');
+  abrir.onclick = () => edAbrirCalendario(panel.hidden);
+  // Escape cierra el calendario
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !panel.hidden) { edAbrirCalendario(false); abrir.focus(); } });
+}
+
+function edAbrirCalendario(abrir) {
+  const panel = $('ed-libre-cal');
+  panel.hidden = !abrir;
+  $('ed-libre-abrir').setAttribute('aria-expanded', String(abrir));
+  if (abrir) {
+    edVista = edVista || new Date(edHoy().getFullYear(), edHoy().getMonth(), 1);
+    edInicioRango = null;
+    edDibujarCalendario();
+  }
+}
+
+function edDibujarCalendario() {
+  const hoyD = edHoy(), ultimo = new Date(hoyD); ultimo.setDate(ultimo.getDate() + 365);
+  const anio = edVista.getFullYear(), mes = edVista.getMonth();
+  const inicio = new Date(anio, mes, 1 - ((new Date(anio, mes, 1).getDay() + 6) % 7));   // semana desde el lunes
+
+  let celdas = '';
+  for (let i = 0; i < 42; i++) {
+    const d = new Date(inicio); d.setDate(inicio.getDate() + i);
+    const k = edClave(d);
+    const fuera = d < hoyD || d > ultimo;
+    const clases = ['cal-day'];
+    if (d.getMonth() !== mes) clases.push('otro');
+    if (d.getTime() === hoyD.getTime()) clases.push('hoy');
+    if (edLibres.includes(k)) clases.push('sel');
+    if (k === edInicioRango) clases.push('sel', 'ed-inicio');
+    // Días en que el negocio ya no atiende por la semana (se ven apagados, igual se pueden marcar)
+    const fila = document.querySelector(`.ed-dia[data-d="${d.getDay()}"] .ed-abierto`);
+    if (fila && !fila.checked && !fuera) clases.push('ed-cierra');
+    if (fuera) clases.push('off');
+    celdas += `<button type="button" class="${clases.join(' ')}" data-k="${k}" ${fuera ? 'disabled' : ''} aria-pressed="${edLibres.includes(k)}" aria-label="${d.getDate()} de ${MONTHS_FULL[d.getMonth()]}">${d.getDate()}</button>`;
+  }
+
+  $('ed-libre-cal').innerHTML = `
+    <div class="ed-modos" role="group" aria-label="Cómo elegir los días">
+      <button type="button" data-modo="dia" class="${edModo === 'dia' ? 'on' : ''}">Un día a la vez</button>
+      <button type="button" data-modo="rango" class="${edModo === 'rango' ? 'on' : ''}">Varios días seguidos</button>
+    </div>
+    <p class="note" id="ed-cal-ayuda">${edModo === 'dia'
+      ? 'Toca un día para marcarlo como libre. Tócalo otra vez para quitarlo.'
+      : (edInicioRango ? 'Ahora toca el último día del período.' : 'Toca el primer día y luego el último; se marcan todos los de en medio.')}</p>
+    <div class="cal-head">
+      <b>${MONTHS_FULL[mes]} ${anio}</b>
+      <div>
+        <button type="button" id="ed-cal-prev" aria-label="Mes anterior" ${new Date(anio, mes, 0) >= hoyD ? '' : 'disabled'}>&#9650;</button>
+        <button type="button" id="ed-cal-next" aria-label="Mes siguiente" ${new Date(anio, mes + 1, 1) <= ultimo ? '' : 'disabled'}>&#9660;</button>
+      </div>
+    </div>
+    <div class="cal-grid cal-dows">${['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(x => `<span>${x}</span>`).join('')}</div>
+    <div class="cal-grid" id="ed-cal-dias">${celdas}</div>
+    <div class="ed-cal-pie">
+      <span class="note">${edLibres.length} día${edLibres.length === 1 ? '' : 's'} libre${edLibres.length === 1 ? '' : 's'} elegido${edLibres.length === 1 ? '' : 's'}</span>
+      <button type="button" class="btnline" id="ed-cal-listo">Listo</button>
+    </div>`;
+
+  $('ed-cal-prev').onclick = () => { edVista = new Date(anio, mes - 1, 1); edDibujarCalendario(); };
+  $('ed-cal-next').onclick = () => { edVista = new Date(anio, mes + 1, 1); edDibujarCalendario(); };
+  $('ed-cal-listo').onclick = () => { edAbrirCalendario(false); $('ed-libre-abrir').focus(); };
+  $('ed-libre-cal').querySelectorAll('.ed-modos button').forEach(b => {
+    b.onclick = () => { edModo = b.dataset.modo; edInicioRango = null; edDibujarCalendario(); };
+  });
+  $('ed-cal-dias').querySelectorAll('.cal-day').forEach(b => { b.onclick = () => edElegirDia(b.dataset.k); });
+}
+
+// Un toque sobre un día del calendario
+function edElegirDia(k) {
+  if (edModo === 'dia') {
+    edLibres = edLibres.includes(k) ? edLibres.filter(x => x !== k) : [...edLibres, k].sort();
+  } else if (!edInicioRango) {
+    edInicioRango = k;                                            // primer toque: empieza el período
+  } else {
+    const [desde, hasta] = [edInicioRango, k].sort();             // segundo toque: se marcan todos los días
+    const hoyD = edHoy(), nuevos = new Set(edLibres);
+    for (let d = fechaDe(desde), n = 0; edClave(d) <= hasta && n < 366; d.setDate(d.getDate() + 1), n++) {
+      if (d >= hoyD) nuevos.add(edClave(d));
+    }
+    edLibres = [...nuevos].sort();
+    edInicioRango = null;
+  }
+  edMensaje('ed-msg-horario', 'Cambiaste tus días libres. Pulsa «Guardar horario» para que queden.', true);
+  edDibujarLibres();                                              // redibuja chips y calendario
 }
 
 /* ---------- Guardar horario ---------- */
