@@ -5,7 +5,7 @@
 
    Uso (desde la carpeta del proyecto):
      node scripts/crear-demo.js
-     firebase deploy --only hosting --config firebase.demo.json --project barber-diego
+     firebase deploy --only hosting,firestore:rules --config firebase.demo.json --project barber-diego
    ===================================================================== */
 const fs = require('fs');
 const path = require('path');
