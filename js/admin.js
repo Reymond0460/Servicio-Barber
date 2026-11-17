@@ -56,6 +56,24 @@ function render() {
         </div>`) : ''}
     </div>`).join('') : '<div class="empty">No hay reservas para hoy.</div>';
 
+  // Próximas reservas (desde mañana), agrupadas por día. Solo lectura.
+  const proximas = D.appts.filter(a => a.date > hoy && a.status === 'open')
+    .sort((a, b) => (a.date + a.time < b.date + b.time ? -1 : 1));
+  let diaActual = '';
+  $('proximas').innerHTML = proximas.length ? proximas.map(a => {
+    const f = fechaDe(a.date);
+    const titulo = a.date !== diaActual
+      ? `<div class="note" style="margin:16px 0 8px;font-weight:600;text-transform:capitalize">${DOWS[f.getDay()]} ${f.getDate()} ${MONTHS[f.getMonth()]}</div>` : '';
+    diaActual = a.date;
+    const origen = a.origen === 'whatsapp' ? 'WhatsApp' : 'Página web';
+    return `${titulo}
+    <div class="row">
+      <div class="t">${a.time}</div>
+      <div class="i"><b>${esc(a.client)}</b><small>${esc(a.svc)} · ${money(a.price)} · ${esc(a.phone)}</small></div>
+      <div class="s">${origen}</div>
+    </div>`;
+  }).join('') : '<div class="empty">No hay reservas para los próximos días.</div>';
+
   $('agenda').querySelectorAll('button').forEach(b => {
     b.onclick = async () => {
       const cita = D.appts.find(x => x.id === b.dataset.id);
