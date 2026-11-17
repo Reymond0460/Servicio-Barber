@@ -5,10 +5,15 @@
 
    Uso (desde la carpeta del proyecto):
      node scripts/crear-demo.js
-     firebase deploy --only hosting --config firebase.demo.json --project barber-diego
+     firebase deploy --only hosting,firestore:rules --config firebase.demo.json --project barber-diego
    ===================================================================== */
 const fs = require('fs');
 const path = require('path');
+
+// La demo se conecta a la base de datos de Firebase (proyecto barber-diego) para que
+// las reservas se compartan entre la página y el agente de WhatsApp "Brayan" (repo auto-wsp2).
+// Pon CON_FIREBASE = false para volver a la demo antigua, con datos solo en el navegador.
+const CON_FIREBASE = true;
 
 const RAIZ = path.join(__dirname, '..');
 const SALIDA = path.join(RAIZ, 'demo-build');
@@ -29,12 +34,14 @@ for (const item of COPIAR) {
   });
 }
 
-// 1) Activar el modo demo.
+// 1) Activar el modo demo (solo en la demo sin base de datos).
+if (!CON_FIREBASE) {
 const modo = path.join(SALIDA, 'js', 'modo.js');
 const antes = fs.readFileSync(modo, 'utf8');
 const despues = antes.replace('const MODO_DEMO = false;', 'const MODO_DEMO = true;');
 if (antes === despues) throw new Error('No se encontró "const MODO_DEMO = false;" en js/modo.js');
 fs.writeFileSync(modo, despues);
+}
 
 // 2) Ocultar los datos reales: la demo es pública y no debe mostrar el teléfono,
 //    el Instagram ni la ubicación reales del negocio. Se aplica solo a la copia.
@@ -69,7 +76,7 @@ for (const archivo of fs.readdirSync(SALIDA).filter(f => f.endsWith('.html'))) {
   const ruta = path.join(SALIDA, archivo);
   let html = fs.readFileSync(ruta, 'utf8')
     .replace('<meta charset="utf-8">', '<meta charset="utf-8">\n  <meta name="robots" content="noindex, nofollow">')
-    .replace(SDK_FIREBASE, '')
+    .replace(CON_FIREBASE ? /$^/ : SDK_FIREBASE, '')
     // En la demo no se muestra Instagram: se quitan el párrafo «Más trabajos en…» y el enlace del pie de página.
     .replace(/\s*<p class="note"[^>]*>Más trabajos en <a href="https:\/\/www\.instagram\.com\/[^"]*"[^>]*>[^<]*<\/a><\/p>/g, '')
     .replace(/ · <a href="https:\/\/www\.instagram\.com\/[^"]*"[^>]*>[^<]*<\/a>/g, '')
@@ -86,10 +93,12 @@ for (const archivo of ['reservas.js']) {
   fs.writeFileSync(ruta, js);
 }
 // Configuración de Firebase vacía (la demo no se conecta a ninguna base de datos).
-fs.writeFileSync(
-  path.join(SALIDA, 'js', 'firebase-config.js'),
-  '// Versión demo: no se usa Firebase.\nconst fdb = null;\n'
-);
+if (!CON_FIREBASE) {
+  fs.writeFileSync(
+    path.join(SALIDA, 'js', 'firebase-config.js'),
+    '// Versión demo: no se usa Firebase.\nconst fdb = null;\n'
+  );
+}
 fs.writeFileSync(path.join(SALIDA, 'robots.txt'), 'User-agent: *\nDisallow: /\n');
 
 console.log('Demo generada en demo-build/');

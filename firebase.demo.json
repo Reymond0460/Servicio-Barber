@@ -2,6 +2,13 @@
   "hosting": {
     "site": "studiobarber-demo",
     "public": "demo-build",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
+  "firestore": {
+    "rules": "firestore.rules"
   }
 }

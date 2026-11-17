@@ -26,7 +26,7 @@ Abrir la carpeta en VS Code y usar la extensión Live Server sobre `index.html`.
 ## Publicar
 
 ```
-firebase deploy --only hosting --project barber-diego
+firebase deploy --only hosting,firestore:rules --project barber-diego
 ```
 
 Las carpetas `documentos/` e `instructivo/` no se publican (ver `firebase.json`).
@@ -47,8 +47,17 @@ Sitio aparte donde cualquiera puede probar la reserva y el panel **sin tocar los
 
 ```
 node scripts/crear-demo.js
-firebase deploy --only hosting --config firebase.demo.json --project barber-diego
+firebase deploy --only hosting,firestore:rules --config firebase.demo.json --project barber-diego
 ```
+
+## Reglas de Firestore: SIEMPRE actualizadas
+
+`firestore.rules` es la única fuente de las reglas. Los comandos de publicación de arriba usan
+`--only hosting,firestore:rules`, así que **cada publicación sube también las reglas** (están enlazadas en
+`firebase.json` y `firebase.demo.json`). Nunca publicar solo `hosting` ni editar las reglas a mano en la consola:
+si se cambian en la consola, el próximo deploy las reemplaza por las del repositorio.
+El agente de WhatsApp (repo auto-wsp2) verifica en su QA (`tests/test_produccion.py`) que las reglas publicadas
+dejen leer `settings/sitio`, `services` y `slots`.
 
 ## Seguridad
 
